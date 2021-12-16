@@ -1,0 +1,4 @@
+Voting rights,can vote,can't vote
+1.0,-1.0
+Working rights,can work, can't work
+2.0,-2.0

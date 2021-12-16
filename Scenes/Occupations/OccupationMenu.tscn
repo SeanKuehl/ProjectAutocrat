@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Occupations/OccupationMenu.gd" type="Script" id=1]
+
+[node name="OccupationMenu" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1037.0
+margin_bottom = 610.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemList" type="ItemList" parent="."]
+margin_left = 200.243
+margin_top = 115.108
+margin_right = 872.243
+margin_bottom = 466.108
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IntroLabel" type="Label" parent="."]
+margin_left = 203.0
+margin_top = 40.0
+margin_right = 858.0
+margin_bottom = 109.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HowManyLeftLabel" type="Label" parent="."]
+margin_left = 208.0
+margin_top = 496.0
+margin_right = 368.0
+margin_bottom = 581.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NextButton" type="Button" parent="."]
+margin_left = 730.0
+margin_top = 478.0
+margin_right = 868.0
+margin_bottom = 583.0
+text = "Next"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackButton" type="Button" parent="."]
+margin_left = 564.7
+margin_top = 478.189
+margin_right = 703.7
+margin_bottom = 581.189
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="NextButton" to="." method="_on_NextButton_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
