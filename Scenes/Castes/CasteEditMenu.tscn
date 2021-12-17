@@ -1,0 +1,159 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Castes/CasteEditMenu.gd" type="Script" id=1]
+
+[node name="CasteEditMenu" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1031.0
+margin_bottom = 608.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePrompt" type="Label" parent="."]
+margin_left = 55.0
+margin_top = 43.0
+margin_right = 237.0
+margin_bottom = 95.0
+text = "Caste Name:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteNameLabel" type="Label" parent="."]
+margin_left = 329.0
+margin_top = 47.0
+margin_right = 731.0
+margin_bottom = 86.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteNameEditButton" type="Button" parent="."]
+margin_left = 840.724
+margin_top = 46.0209
+margin_right = 956.724
+margin_bottom = 124.021
+text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DescriptionPrompt" type="Label" parent="."]
+margin_left = 56.0
+margin_top = 156.0
+margin_right = 172.0
+margin_bottom = 214.0
+text = "Caste Description:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DescContainer" type="ScrollContainer" parent="."]
+margin_left = 272.0
+margin_top = 147.0
+margin_right = 778.0
+margin_bottom = 253.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Desc" type="Label" parent="DescContainer"]
+margin_right = 1.0
+margin_bottom = 14.0
+autowrap = true
+
+[node name="CasteDescEditButton" type="Button" parent="."]
+margin_left = 831.744
+margin_top = 186.329
+margin_right = 960.744
+margin_bottom = 267.329
+text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteSelectionsPrompt" type="Label" parent="."]
+margin_left = 57.0
+margin_top = 329.714
+margin_right = 177.0
+margin_bottom = 368.714
+text = "Selections:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteRightsPrompt" type="Label" parent="."]
+margin_left = 415.228
+margin_top = 336.367
+margin_right = 483.228
+margin_bottom = 370.367
+text = "Rights:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteOccupationsPrompt" type="Label" parent="."]
+margin_left = 702.661
+margin_top = 332.249
+margin_right = 816.661
+margin_bottom = 382.249
+text = "Occupations:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SelectionsEditButton" type="Button" parent="."]
+margin_left = 187.429
+margin_top = 306.062
+margin_right = 317.429
+margin_bottom = 382.062
+text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightsEditButton" type="Button" parent="."]
+margin_left = 507.353
+margin_top = 312.044
+margin_right = 625.353
+margin_bottom = 389.044
+text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OccupationsEditButton" type="Button" parent="."]
+margin_left = 833.989
+margin_top = 315.412
+margin_right = 946.989
+margin_bottom = 383.412
+text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DoneButton" type="Button" parent="."]
+margin_left = 182.961
+margin_top = 473.679
+margin_right = 303.961
+margin_bottom = 545.679
+text = "Done"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeleteCasteButton" type="Button" parent="."]
+margin_left = 496.128
+margin_top = 481.536
+margin_right = 628.128
+margin_bottom = 552.536
+text = "Delete Caste"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="CasteNameEditButton" to="." method="_on_CasteNameEditButton_pressed"]
+[connection signal="pressed" from="CasteDescEditButton" to="." method="_on_CasteDescEditButton_pressed"]
+[connection signal="pressed" from="SelectionsEditButton" to="." method="_on_SelectionsEditButton_pressed"]

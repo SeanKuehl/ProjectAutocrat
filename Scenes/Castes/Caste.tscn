@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Castes/Caste.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.494118, 0.12549, 0.12549, 1 )
+
+[node name="Caste" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -750.0
+margin_bottom = -464.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 273.0
+margin_bottom = 132.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="NameLabel" type="Label" parent="."]
+margin_right = 272.0
+margin_bottom = 36.0
+
+[node name="EditButton" type="Button" parent="."]
+margin_left = 87.552
+margin_top = 75.2049
+margin_right = 181.552
+margin_bottom = 112.205
+text = "Edit"
+[connection signal="pressed" from="EditButton" to="." method="_on_EditButton_pressed"]

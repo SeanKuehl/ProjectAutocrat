@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/MainMenu/MainMenu.gd" type="Script" id=1]
+
+[node name="MainMenu" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1032.0
+margin_bottom = 608.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EconomyPointsLabel" type="Label" parent="."]
+margin_left = 85.3071
+margin_top = 61.7354
+margin_right = 217.307
+margin_bottom = 109.735
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PolicePointsLabel" type="Label" parent="."]
+margin_left = 413.066
+margin_top = 99.8991
+margin_right = 581.066
+margin_bottom = 169.899
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MilitaryPointsLabel" type="Label" parent="."]
+margin_left = 763.274
+margin_top = 88.6745
+margin_right = 926.274
+margin_bottom = 170.674
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CreateCasteButton" type="Button" parent="."]
+margin_left = 405.209
+margin_top = 483.781
+margin_right = 573.209
+margin_bottom = 557.781
+text = "Create Caste"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="CreateCasteButton" to="." method="_on_CreateCasteButton_pressed"]

@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Castes/CasteBasicInfoMenu.gd" type="Script" id=1]
+
+[node name="CasteBasicInfoMenu" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = 2.245
+margin_right = 1037.24
+margin_bottom = 610.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnterNamePrompt" type="Label" parent="."]
+margin_left = 105.511
+margin_top = 69.5926
+margin_right = 240.511
+margin_bottom = 129.593
+text = "Enter Caste Name Here:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnterDescPrompt" type="Label" parent="."]
+margin_left = 75.2049
+margin_top = 168.369
+margin_right = 277.205
+margin_bottom = 238.369
+text = "Enter Caste Description Here:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteName" type="LineEdit" parent="."]
+margin_left = 316.348
+margin_top = 52.2856
+margin_right = 742.348
+margin_bottom = 107.285
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteDesc" type="TextEdit" parent="."]
+margin_left = 272.041
+margin_top = 153.388
+margin_right = 901.041
+margin_bottom = 427.388
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DoneButton" type="Button" parent="."]
+margin_left = 451.23
+margin_top = 483.781
+margin_right = 583.23
+margin_bottom = 548.781
+text = "Done"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ErrorMessage" type="Label" parent="."]
+margin_left = 660.007
+margin_top = 468.067
+margin_right = 850.007
+margin_bottom = 557.067
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="DoneButton" to="." method="_on_DoneButton_pressed"]
