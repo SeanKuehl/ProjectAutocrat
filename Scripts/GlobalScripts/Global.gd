@@ -1,5 +1,9 @@
 extends Node
 
+var selectionClass = load("res://Scripts/Selections/Selection.gd")
+var rightClass = load("res://Scripts/Rights/Right.gd")
+var occupationClass = load("res://Scripts/Occupations/Occupation.gd")
+
 var casteIdBase = 0
 
 var listOfSelections = []	#other things will copy from here and make changes to their local copy
@@ -20,16 +24,57 @@ func SetListOfSelections(newValue):
 	listOfSelections = newValue
 
 func GetListOfSelections():
-	return listOfSelections
+
+
+	var derefToSend = []
+	#make a new instance of the object, duplicating all the fields!
+	for x in range(0,len(listOfSelections)):
+		var newName = listOfSelections[x].GetName()
+		var newValues = listOfSelections[x].GetValues()
+		var newChosen = listOfSelections[x].GetChosenValues()
+		var newSelection = selectionClass.new()
+		newSelection.copy(newName, newValues, newChosen)
+		derefToSend.append(newSelection)
+
+	return derefToSend
 
 func SetListOfRights(newValue):
 	listOfRights = newValue
 
 func GetListOfRights():
-	return listOfRights
+
+
+	var derefToSend = []
+
+	for x in range(0, len(listOfRights)):
+
+		var newName = listOfRights[x].GetName()
+		var newStrings = listOfRights[x].GetStringValues()
+		var newDoubles = listOfRights[x].GetDoubleValues()
+		var newChosenIndex = listOfRights[x].GetChosenIndex()
+		var newRight = rightClass.new()
+		newRight.copy(newName, newStrings, newDoubles, newChosenIndex)
+		derefToSend.append(newRight)
+
+
+	return derefToSend
 
 func GetListOfOccupations():
-	return listOfOccupations
+
+	var derefToSend = []
+
+	for x in range(0,len(listOfOccupations)):
+
+		var newName = listOfOccupations[x].GetName()
+		var newMilMult = listOfOccupations[x].GetMilitaryMultiplier()
+		var newPolMult = listOfOccupations[x].GetPoliceMultiplier()
+		var newEconMult = listOfOccupations[x].GetEconomyMultiplier()
+		var newSelected = listOfOccupations[x].GetSelected()
+		var newOccupation = occupationClass.new()
+		newOccupation.copy(newName, newMilMult, newPolMult, newEconMult, newSelected)
+		derefToSend.append(newOccupation)
+
+	return derefToSend
 
 func SetListOfOccupations(newVal):
 	listOfOccupations = newVal

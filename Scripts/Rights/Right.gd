@@ -21,6 +21,11 @@ func init(rawRightStrings, rawRightDoubles):
 	for x in range(0, len(rawRightDoubles)):
 		doubleValuesList.append(rawRightDoubles[x])
 
+func copy(newName, newStrings, newDoubles, newChosenIndex):
+	rightName = newName
+	stringValuesList = newStrings
+	doubleValuesList = newDoubles
+	chosenIndex = newChosenIndex
 
 func GetName():
 	return rightName

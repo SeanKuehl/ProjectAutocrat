@@ -15,6 +15,10 @@ var occupationList = []
 
 var casteList = []
 
+var milPopAndApprovalList = [0,0]	#pop, approval
+var polPopAndApprovalList = [0,0]	#pop, approval
+var occupationPoints = [0,0,0]	#econ, pol, mil
+
 func _ready():
 	casteEditMenu = casteEditMenu.instance()
 	get_parent().ConnectCasteEditMenuSignals(casteEditMenu)
@@ -33,9 +37,10 @@ func AddNewlyCreatedCaste(newCasteInfo):
 	newCaste.CalculateRightsApproval()
 	newCaste.rect_global_position = Vector2(100,100)
 	newCaste.connect("UserWantsToEditCaste", self, "DoEditCasteMenu")
-	var numOfPeopleInCaste = CalculatePeopleInCasteBeforeConflicts(newCaste.GetSelections())
-	newCaste.SetAmountOfPeopleInCaste(numOfPeopleInCaste)
+
+
 	casteList.append(newCaste)
+	ResetCastesAfterChange()
 	add_child(newCaste)
 
 
@@ -192,7 +197,17 @@ func ResetCastesAfterChange():
 
 	CalculateCasteRelativeApproval()
 
-	#need get military etc. points and approval
+	GetOccupationPopPointsAndApproval()
+
+	$EconomyPointsLabel.text = "Economy Points: "+str(occupationPoints[0])
+	$PolicePointsLabel.text = "Police Points: "+str(occupationPoints[1])
+	$MilitaryPointsLabel.text = "Military Points: "+str(occupationPoints[2])
+
+	for caste in casteList:
+		print(caste.GetName())
+		print(caste.GetRightsApproval())
+		print(caste.GetRelativeApproval())
+		print(caste.GetAmountOfPeopleInCaste())
 
 func GetOccupationPopPointsAndApproval():
 	#at end determine number in "economy" role by subtracting other role pops from
@@ -203,7 +218,7 @@ func GetOccupationPopPointsAndApproval():
 	var policePopList = []
 	var policeApprovalList = []
 
-	var overallPointsList = [0,0,0]
+	var overallPointsList = [0,0,0]	#econ, pol, mil
 
 	for caste in casteList:
 		# getocpoppointsandapproval returns [populationInOccupation, approval, points] where points is a list in itself
@@ -226,27 +241,49 @@ func GetOccupationPopPointsAndApproval():
 
 	#find wieghted approvals(weighted to population)
 	#polAveragedApproval = polWeightedApprovalSum / polTotalPop;
-	var totalPop = 0
-	var wieghtedApproval = 0
-
+	var milTotalPop = 0
+	var milWieghtedApproval = 0
 	var milAverageApproval = 0
+
+	var polTotalPop = 0
+	var polWieghtedApproval = 0
 	var polAverageApproval = 0
 	#will need total pop for each occupation! At least for end for figuring out
 	#how many in economy role etc.
 	for x in range(0, len(militaryPopList)):
 		#the pop and approval lists should be the same length
 		#unlike the mil and pol lists of things
-		totalPop += militaryPopList[x]
-		wieghtedApproval += militaryPopList[x] * militaryApprovalList[x]	#do population times approval
-	milAverageApproval = wieghtedApproval / totalPop
+		milTotalPop += militaryPopList[x]
+		milWieghtedApproval += militaryPopList[x] * militaryApprovalList[x]	#do population times approval
+	if milTotalPop == 0:
+		milAverageApproval = 0
+	else:
+		milAverageApproval = milWieghtedApproval / milTotalPop
 
-	totalPop = 0
-	wieghtedApproval = 0
 
+	#now get for police
 	for x in range(0, len(policePopList)):
-		totalPop += policePopList[x]
-		wieghtedApproval += policePopList[x] * policeApprovalList[x]
-	polAverageApproval = wieghtedApproval / totalPop
+		polTotalPop += policePopList[x]
+		polWieghtedApproval += policePopList[x] * policeApprovalList[x]
+
+	if polTotalPop == 0:
+		polAverageApproval = 0
+	else:
+		polAverageApproval = polWieghtedApproval / polTotalPop
+
+	#now get for economy role, everyone not in another role
+	var popInEcon = Global.GetPopulationSize() - (polTotalPop + milTotalPop)
+	#econ has *2 multiplier for econ points
+	overallPointsList[0] += 2 * popInEcon
+
+
+	milPopAndApprovalList[0] = milTotalPop
+	milPopAndApprovalList[1] = milAverageApproval
+
+	polPopAndApprovalList[0] = polTotalPop
+	polPopAndApprovalList[0] = polAverageApproval
+
+	occupationPoints = overallPointsList
 
 
 func CalculateCasteRelativeApproval():

@@ -21,13 +21,16 @@ signal UserWantsToEditCaste(casteInfo, casteID)
 func _ready():
 	pass
 
+func GetName():
+	return casteName
+
 func CalculateRightsApproval():
 	var total = 0
 
 	for x in range(0,len(rightsList)):
 		var doubleValues = rightsList[x].GetDoubleValues()
 		var indexOfValueToAdd = rightsList[x].GetChosenIndex()
-		total += doubleValues[indexOfValueToAdd]
+		total += float(doubleValues[indexOfValueToAdd])
 
 	rightsApproval = total
 
@@ -56,13 +59,14 @@ func HideMyStuff():
 
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+
 func ShowMyStuff():
 	$Panel.show()
 	$NameLabel.show()
 	$EditButton.show()
 
-	mouse_filter = Control.MOUSE_FILTER_STOP	#since it's a control node, unless these two are done then
-	#it will keep picking up input events even if hidden and behind other menus
+	mouse_filter = Control.MOUSE_FILTER_STOP
+
 
 #occupationName is a string with the name
 func GetOccupationPopPointsAndApproval(occupationName):

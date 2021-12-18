@@ -148,6 +148,7 @@ func CreateCaste():
 	get_node("MainMenu").HideMyStuff()
 	creatingCaste = true
 
+	get_node("CasteBasicInfoMenu").Clear()
 	get_node("CasteBasicInfoMenu").ShowMyStuff()
 
 

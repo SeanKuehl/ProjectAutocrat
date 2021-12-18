@@ -22,6 +22,11 @@ func init(rawSelection):
 		chosenValuesList.append(false)	#these will be changes to true if chosen by the user
 
 
+func copy(passedName, passedValuesList, passedChosenValues):
+	selectionName = passedName
+	valuesList = passedValuesList
+	chosenValuesList = passedChosenValues
+
 func GetName():
 	return selectionName
 
@@ -30,6 +35,8 @@ func GetValues():
 
 func GetChosenValues():
 	return chosenValuesList
+
+
 
 func SetChosenValues(newValues):
 

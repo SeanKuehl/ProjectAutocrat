@@ -29,6 +29,7 @@ func ShowMyStuff():
 func CreateRightList():
 	rightIndex = 0
 	rightList = Global.GetListOfRights()	#create a local copy of the global list to make changes to
+
 	UpdateDisplay()
 
 func EditRightList(rightsListToEdit):

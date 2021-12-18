@@ -5,6 +5,10 @@ signal UserDoneWithBasicInfo(casteName, casteDesc)
 func _ready():
 	pass
 
+func Clear():
+	$CasteName.text = ""
+	$CasteDesc.text = ""
+
 func Init(casteName, casteDesc):
 	$CasteName.text = casteName
 	$CasteDesc.text = casteDesc

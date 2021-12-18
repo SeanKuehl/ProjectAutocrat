@@ -29,6 +29,7 @@ func ShowMyStuff():
 func CreateSelectionList():
 	selectionIndex = 0
 	selectionList = Global.GetListOfSelections()	#create a local copy of the global list to make changes to
+
 	UpdateDisplay()
 
 func EditSelectionList(selectionsListToEdit):

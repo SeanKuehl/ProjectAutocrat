@@ -20,6 +20,12 @@ func init(passedOccupationName, values):
 	policePointsMultiplier = values[polIndex]
 	militaryPointsMultiplier = values[milIndex]
 
+func copy(newName, newMilMult, newPolMult, newEconMult, newSelected):
+	occupationName = newName
+	militaryPointsMultiplier = newMilMult
+	policePointsMultiplier = newPolMult
+	economyPointsMultiplier = newEconMult
+	selected = newSelected
 
 func GetName():
 	return occupationName
