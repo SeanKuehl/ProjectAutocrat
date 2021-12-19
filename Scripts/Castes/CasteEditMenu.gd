@@ -2,6 +2,8 @@ extends CanvasLayer
 
 signal UserWantsToEditNameAndDescription(casteName, casteDesc, casteID)
 signal UserWantsToEditSelections(selections, casteID)
+signal UserWantsToEditRights(rights, casteID)
+signal UserWantsToEditOccupations(occupations, casteID)
 
 
 var casteName = ""
@@ -84,3 +86,14 @@ func _on_SelectionsEditButton_pressed():
 	HideMyStuff()
 
 	emit_signal("UserWantsToEditSelections", selectionsList, ID)
+
+
+func _on_RightsEditButton_pressed():
+	emit_signal("UserWantsToEditRights", rightsList, ID)
+
+
+
+
+func _on_OccupationsEditButton_pressed():
+	emit_signal("UserWantsToEditOccupations", occupationList, ID)
+

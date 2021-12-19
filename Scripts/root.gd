@@ -17,6 +17,8 @@ onready var thisNode = get_tree().get_current_scene()
 
 signal EditCasteNameAndDesc(casteName, casteDesc, casteID)
 signal EditCasteSelections(selections, casteID)
+signal EditCasteRights(rights, casteID)
+signal EditCasteOccupations(occupations, casteID)
 
 #var game = preload("res://Scenes/SelectionMenu.tscn").instance()
 var currentSelectionList = 0
@@ -140,6 +142,10 @@ func GetUpdatesRightListFromMenu(rightList):
 		get_node("OccupationMenu").ShowMyStuff()
 		get_node("OccupationMenu").CreateOccupationList()
 
+	if editingCaste:
+
+		FinishEditOfRights()
+
 
 func GetUpdatesOccupationListFromMenu(occupationList):
 
@@ -149,6 +155,11 @@ func GetUpdatesOccupationListFromMenu(occupationList):
 		get_node("OccupationMenu").HideMyStuff()
 
 		FinishCreateCaste()
+
+	if editingCaste:
+		FinishEditOfOccupations()
+
+
 
 
 func CreateCaste():
@@ -184,6 +195,8 @@ func ConnectCasteEditMenuSignals(editMenuObject):
 	#"UserWantsToEditNameAndDescription"
 	editMenuObject.connect("UserWantsToEditNameAndDescription", self, "StartEditOfNameAndDesc")
 	editMenuObject.connect("UserWantsToEditSelections", self, "StartEditOfSelections")
+	editMenuObject.connect("UserWantsToEditRights", self, "StartEditOfRights")
+	editMenuObject.connect("UserWantsToEditOccupations", self, "StartEditOfOccupations")
 
 
 func StartEditOfSelections(selections, casteID):
@@ -199,9 +212,41 @@ func FinishEditOfSelections():
 	#currentSelectionList
 
 	editingCaste = false
-	get_node("SelectionMenu").HideMyStuff()
+	get_node("RightMenu").HideMyStuff()
 
-	emit_signal("EditCasteSelections", currentSelectionList, currentCasteID)
+	emit_signal("EditCasteRights", currentRightList, currentCasteID)
+	#send the new name, desc and id back to main menu so it can edit the right caste
+	get_node("MainMenu").ShowMyStuff()
+
+func StartEditOfRights(rights, casteID):
+	get_node("MainMenu").HideMyStuff()
+	currentCasteID = casteID
+
+	editingCaste = true
+	get_node("RightMenu").ShowMyStuff()
+	get_node("RightMenu").EditRightList(rights)
+
+func FinishEditOfRights():
+	editingCaste = false
+	get_node("RightMenu").HideMyStuff()
+
+	emit_signal("EditCasteNameAndDesc", casteName, casteDescription, currentCasteID)
+	#send the new name, desc and id back to main menu so it can edit the right caste
+	get_node("MainMenu").ShowMyStuff()
+
+func StartEditOfOccupations(occupations, casteID):
+	get_node("MainMenu").HideMyStuff()
+	currentCasteID = casteID
+
+	editingCaste = true
+	get_node("OccupationMenu").ShowMyStuff()
+	get_node("OccupationMenu").EditOccupationList(occupations)
+
+func FinishEditOfOccupations():
+	editingCaste = false
+	get_node("OccupationMenu").HideMyStuff()
+
+	emit_signal("EditCasteOccupations", currentOccupationList, currentCasteID)
 	#send the new name, desc and id back to main menu so it can edit the right caste
 	get_node("MainMenu").ShowMyStuff()
 

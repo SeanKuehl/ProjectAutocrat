@@ -157,3 +157,5 @@ __meta__ = {
 [connection signal="pressed" from="CasteNameEditButton" to="." method="_on_CasteNameEditButton_pressed"]
 [connection signal="pressed" from="CasteDescEditButton" to="." method="_on_CasteDescEditButton_pressed"]
 [connection signal="pressed" from="SelectionsEditButton" to="." method="_on_SelectionsEditButton_pressed"]
+[connection signal="pressed" from="RightsEditButton" to="." method="_on_RightsEditButton_pressed"]
+[connection signal="pressed" from="OccupationsEditButton" to="." method="_on_OccupationsEditButton_pressed"]

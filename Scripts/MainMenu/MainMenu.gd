@@ -372,6 +372,8 @@ func SetChangeInPopAfterConflict(casteID, popToSubtract):
 func ConnectSignalsFromRoot(root):
 	root.connect("EditCasteNameAndDesc", self, "UpdateCasteNameAndDesc")
 	root.connect("EditCasteSelections", self, "UpdateCasteSelections")
+	root.connect("EditCasteRights", self, "UpdateCasteRights")
+	root.connect("EditCasteOccupations", self, "UpdateCasteOccupations")
 
 
 func HideMyStuff():
@@ -401,6 +403,18 @@ func UpdateCasteSelections(selections, passedCasteID):
 		#don't need -1 because max is exclusive
 		if casteList[x].GetID() == passedCasteID:
 			casteList[x].SetSelections(selections)
+
+func UpdateCasteRights(rights, passedCasteID):
+	for x in range(0, len(casteList)):
+		#don't need -1 because max is exclusive
+		if casteList[x].GetID() == passedCasteID:
+			casteList[x].SetRights(rights)
+
+func UpdateCasteOccupations(occupations, passedCasteID):
+	for x in range(0, len(casteList)):
+		#don't need -1 because max is exclusive
+		if casteList[x].GetID() == passedCasteID:
+			casteList[x].SetOccupations(occupations)
 
 func UpdateCasteNameAndDesc(passedCasteName, passedCasteDesc, passedCasteID):
 

@@ -106,13 +106,19 @@ func SetNameAndDesc(passedName, passedDesc):
 	$NameLabel.text = casteName
 
 func SetSelections(passedSelections):
-	print("set was called")
+
 	selectionsList = DerefSelectionsList(passedSelections)
 	#selectionsList = passedSelections
 
 func GetSelections():
 	return selectionsList
 
+func SetRights(passedRights):
+	rightsList = passedRights
+
+
+func SetOccupations(passedOccupations):
+	occupationList = passedOccupations
 
 
 func Init(newCasteInfo):
