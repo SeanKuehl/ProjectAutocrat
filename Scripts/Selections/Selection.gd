@@ -27,6 +27,18 @@ func copy(passedName, passedValuesList, passedChosenValues):
 	valuesList = passedValuesList
 	chosenValuesList = passedChosenValues
 
+func DerefChosenValuesList():
+	var derefToReturn = []
+
+	for x in chosenValuesList:
+		if x == true:
+			derefToReturn.append(true)
+		elif x == false:
+			derefToReturn.append(false)
+
+	return derefToReturn
+
+
 func GetName():
 	return selectionName
 
@@ -34,7 +46,7 @@ func GetValues():
 	return valuesList
 
 func GetChosenValues():
-	return chosenValuesList
+	return DerefChosenValuesList()
 
 
 

@@ -1,5 +1,8 @@
 extends Control
 
+var selectionClass = load("res://Scripts/Selections/Selection.gd")
+
+
 var casteName = ""
 var casteDesc = ""
 
@@ -88,7 +91,7 @@ func GetOccupationPopPointsAndApproval(occupationName):
 			waysToDividePopBy += 1
 		if x.GetName() == occupationName and x.GetSelected() == true:
 			occupationIsEnabled = true
-			multipliersList = [x.GetEconomyMultiplier(), x.GetPoliceMultiplier(), x.GetMilitaryMultiplier()]
+			multipliersList = [float(x.GetEconomyMultiplier()), float(x.GetPoliceMultiplier()), float(x.GetMilitaryMultiplier())]
 
 	if occupationIsEnabled:
 		populationInOccupation = GetAmountOfPeopleInCaste() / waysToDividePopBy
@@ -103,16 +106,24 @@ func SetNameAndDesc(passedName, passedDesc):
 	$NameLabel.text = casteName
 
 func SetSelections(passedSelections):
-	selectionsList = passedSelections
+	print("set was called")
+	selectionsList = DerefSelectionsList(passedSelections)
+	#selectionsList = passedSelections
 
 func GetSelections():
 	return selectionsList
 
+
+
 func Init(newCasteInfo):
+	print(infoList)
+	var temp = newCasteInfo[2]
+	for selection in temp:
+		print(selection.GetChosenValues())
 
 	casteName = newCasteInfo[0]
 	casteDesc = newCasteInfo[1]
-	selectionsList = newCasteInfo[2]
+	selectionsList = DerefSelectionsList(newCasteInfo[2])
 	rightsList = newCasteInfo[3]
 	occupationList = newCasteInfo[4]
 
@@ -121,6 +132,20 @@ func Init(newCasteInfo):
 	ID = Global.GetNewCasteID()
 	infoList.append(ID)
 	$NameLabel.text = casteName
+
+
+func DerefSelectionsList(listOfSelections):
+	var derefToSend = []
+	#make a new instance of the object, duplicating all the fields!
+	for x in range(0,len(listOfSelections)):
+		var newName = listOfSelections[x].GetName()
+		var newValues = listOfSelections[x].GetValues()
+		var newChosen = listOfSelections[x].GetChosenValues()
+		var newSelection = selectionClass.new()
+		newSelection.copy(newName, newValues, newChosen)
+		derefToSend.append(newSelection)
+
+	return derefToSend
 
 func _on_EditButton_pressed():
 	#caste info could have been edited since last time, remake infoList

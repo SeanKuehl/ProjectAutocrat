@@ -32,7 +32,11 @@ func Init(econPoints, polPoints, milPoints):
 	$MilitaryPointsLabel.text = "Military Points: "+str(milPoints)
 
 func AddNewlyCreatedCaste(newCasteInfo):
+
+
+
 	var newCaste = caste.instance()
+
 	newCaste.Init(newCasteInfo)
 	newCaste.CalculateRightsApproval()
 	newCaste.rect_global_position = Vector2(100,100)
@@ -41,7 +45,13 @@ func AddNewlyCreatedCaste(newCasteInfo):
 
 	casteList.append(newCaste)
 	ResetCastesAfterChange()
+
+
+
 	add_child(newCaste)
+
+
+
 
 
 func CalculatePeopleInCasteBeforeConflicts(listOfSelections):
@@ -65,9 +75,12 @@ func CalculatePeopleInCasteBeforeConflicts(listOfSelections):
 			#take the total slices - selected slices to get how many slices are excluded the caste
 				#then multiply this by the population per slice, and subtract this from the total population to get how many people
 				#are allowed in the caste
+
 			var slicesExcluded = numberOfSlices - numberOfSlicesSelected
 			var numberOfPeopleExcluded = slicesExcluded * populationPerSlice
 			populationSizeToAlter -= numberOfPeopleExcluded
+
+
 
 	return populationSizeToAlter
 
@@ -192,6 +205,12 @@ func ResetCastesAfterChange():
 	for x in range(0,len(casteList)):
 		var peopleInCaste = CalculatePeopleInCasteBeforeConflicts(casteList[x].GetSelections())
 		casteList[x].SetAmountOfPeopleInCaste(peopleInCaste)
+		print(casteList[x].GetName())
+		print(casteList[x].GetRightsApproval())
+		print(casteList[x].GetRelativeApproval())
+		print(casteList[x].GetAmountOfPeopleInCaste())
+		print(casteList[x].GetID())
+
 
 	ResolveAmountOfPeopleInCasteConflicts()
 
@@ -203,11 +222,13 @@ func ResetCastesAfterChange():
 	$PolicePointsLabel.text = "Police Points: "+str(occupationPoints[1])
 	$MilitaryPointsLabel.text = "Military Points: "+str(occupationPoints[2])
 
-	for caste in casteList:
-		print(caste.GetName())
-		print(caste.GetRightsApproval())
-		print(caste.GetRelativeApproval())
-		print(caste.GetAmountOfPeopleInCaste())
+	for x in range(0,len(casteList)):
+		print(casteList[x].GetName())
+		print(casteList[x].GetRightsApproval())
+		print(casteList[x].GetRelativeApproval())
+		print(casteList[x].GetAmountOfPeopleInCaste())
+		print(casteList[x].GetID())
+
 
 func GetOccupationPopPointsAndApproval():
 	#at end determine number in "economy" role by subtracting other role pops from

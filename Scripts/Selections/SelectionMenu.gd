@@ -1,8 +1,13 @@
 extends CanvasLayer
 
+
+
 onready var selectionList = 0	#create a local copy of the global list to make changes to
 var selectionIndex = 0
+
 var mode = "Create"
+
+var timesUsed = 0
 
 
 
@@ -27,14 +32,21 @@ func ShowMyStuff():
 
 
 func CreateSelectionList():
+	mode = "Create"
 	selectionIndex = 0
+
+
+
 	selectionList = Global.GetListOfSelections()	#create a local copy of the global list to make changes to
 
+
 	UpdateDisplay()
+
 
 func EditSelectionList(selectionsListToEdit):
 	mode = "Edit"
 	selectionIndex = 0
+
 	selectionList = selectionsListToEdit
 	EditUpdateDisplay()
 
@@ -81,29 +93,40 @@ func UpdateDisplay():
 func _on_NextButton_pressed():
 	#if no more selections, finish
 
+
 	#get selection chosen values, change them based on selected, update selection chosen values
-	var oldSelectedItems = selectionList[selectionIndex].GetChosenValues()
+	var oldSelectedItems = selectionList[selectionIndex].GetChosenValues()	#this could be the issue!
 	#save the data they've selected to the local copy of the selections list
 	var newSelectedItems = $ItemList.get_selected_items()
 
-	if mode == "Edit":
-		for x in range(0,len(oldSelectedItems)):
-			oldSelectedItems[x] = false	#unset them all before setting them again
+
+
+	for x in range(0,len(oldSelectedItems)):
+		oldSelectedItems[x] = false	#unset them all before setting them again
 
 
 
 
 	for x in newSelectedItems:
 		oldSelectedItems[x] = true	#if that index exists in the selections the user made, set it to true that it has been chosen
-
+	#problem happens here!
 
 	selectionList[selectionIndex].SetChosenValues(oldSelectedItems)
+
 
 
 	if selectionIndex == (len(selectionList)-1):
 		#if there are no more selections, finish
 		HideMyStuff()
+
+		#var listToSend = DerefSelectionList(selectionList)
+
+		#selectionList[0].SetChosenValues([true, false])
+		#print(listToSend[0].GetChosenValues())
+
+
 		emit_signal("UserDoneWithSelectionChanges", selectionList)
+
 
 	else:
 		#keep going
@@ -112,9 +135,11 @@ func _on_NextButton_pressed():
 
 			selectionIndex += 1
 			UpdateDisplay()
+
 		else:
 			selectionIndex += 1
 			EditUpdateDisplay()
+
 
 
 

@@ -111,8 +111,15 @@ func _ready():
 	#	$ItemList.add_item(x)
 
 
+
+
 func GetUpdatesSelectionListFromMenu(selectionList):
+
 	currentSelectionList = selectionList
+
+
+
+
 
 	if editingCaste:
 		FinishEditOfSelections()
@@ -147,6 +154,7 @@ func GetUpdatesOccupationListFromMenu(occupationList):
 func CreateCaste():
 	get_node("MainMenu").HideMyStuff()
 	creatingCaste = true
+	editingCaste = false
 
 	get_node("CasteBasicInfoMenu").Clear()
 	get_node("CasteBasicInfoMenu").ShowMyStuff()
@@ -188,7 +196,7 @@ func StartEditOfSelections(selections, casteID):
 
 
 func FinishEditOfSelections():
-	currentSelectionList
+	#currentSelectionList
 
 	editingCaste = false
 	get_node("SelectionMenu").HideMyStuff()

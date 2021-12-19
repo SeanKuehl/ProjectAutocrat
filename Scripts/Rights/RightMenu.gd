@@ -27,6 +27,7 @@ func ShowMyStuff():
 
 
 func CreateRightList():
+	mode = "Create"
 	rightIndex = 0
 	rightList = Global.GetListOfRights()	#create a local copy of the global list to make changes to
 
