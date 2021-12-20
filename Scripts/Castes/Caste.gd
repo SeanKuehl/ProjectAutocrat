@@ -153,6 +153,8 @@ func DerefSelectionsList(listOfSelections):
 
 	return derefToSend
 
+
+
 func _on_EditButton_pressed():
 	#caste info could have been edited since last time, remake infoList
 	infoList = [casteName, casteDesc, selectionsList, rightsList, occupationList, ID]

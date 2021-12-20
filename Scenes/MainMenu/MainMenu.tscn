@@ -13,28 +13,28 @@ __meta__ = {
 }
 
 [node name="EconomyPointsLabel" type="Label" parent="."]
-margin_left = 85.3071
-margin_top = 61.7354
-margin_right = 217.307
-margin_bottom = 109.735
+margin_left = 26.9391
+margin_top = 20.2043
+margin_right = 158.939
+margin_bottom = 68.2039
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PolicePointsLabel" type="Label" parent="."]
-margin_left = 413.066
-margin_top = 99.8991
-margin_right = 581.066
-margin_bottom = 169.899
+margin_left = 408.576
+margin_top = 15.7145
+margin_right = 576.576
+margin_bottom = 85.7144
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="MilitaryPointsLabel" type="Label" parent="."]
-margin_left = 763.274
-margin_top = 88.6745
-margin_right = 926.274
-margin_bottom = 170.674
+margin_left = 759.907
+margin_top = 10.1022
+margin_right = 922.907
+margin_bottom = 92.1017
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -48,4 +48,33 @@ text = "Create Caste"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="EndTurnButton" type="Button" parent="."]
+margin_left = 615.0
+margin_top = 493.0
+margin_right = 735.0
+margin_bottom = 559.0
+text = "End Turn"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TurnLabel" type="Label" parent="."]
+margin_left = 787.0
+margin_top = 493.0
+margin_right = 947.0
+margin_bottom = 556.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TreasuryLabel" type="Label" parent="."]
+margin_left = 123.471
+margin_top = 492.761
+margin_right = 255.471
+margin_bottom = 552.761
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="CreateCasteButton" to="." method="_on_CreateCasteButton_pressed"]
+[connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]

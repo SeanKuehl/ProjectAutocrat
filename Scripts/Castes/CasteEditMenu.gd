@@ -5,6 +5,9 @@ signal UserWantsToEditSelections(selections, casteID)
 signal UserWantsToEditRights(rights, casteID)
 signal UserWantsToEditOccupations(occupations, casteID)
 
+signal UserIsDoneWithCasteEditMenu()
+signal UserWantsToDeleteCaste(casteID)
+
 
 var casteName = ""
 var casteDesc = ""
@@ -97,3 +100,12 @@ func _on_RightsEditButton_pressed():
 func _on_OccupationsEditButton_pressed():
 	emit_signal("UserWantsToEditOccupations", occupationList, ID)
 
+
+
+func _on_DoneButton_pressed():
+	emit_signal("UserIsDoneWithCasteEditMenu")
+
+
+func _on_DeleteCasteButton_pressed():
+
+	emit_signal("UserWantsToDeleteCaste", ID)

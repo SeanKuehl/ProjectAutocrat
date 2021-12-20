@@ -4,6 +4,8 @@ onready var caste = load("res://Scenes/Castes/Caste.tscn")
 
 onready var casteEditMenu = load("res://Scenes/Castes/CasteEditMenu.tscn")
 
+onready var randomEventMenu = load("res://Scenes/RandomEvents/RandomEventMenu.tscn")
+
 signal UserWantsToCreateCaste()
 
 var casteName = ""
@@ -19,12 +21,59 @@ var milPopAndApprovalList = [0,0]	#pop, approval
 var polPopAndApprovalList = [0,0]	#pop, approval
 var occupationPoints = [0,0,0]	#econ, pol, mil
 
-func _ready():
-	casteEditMenu = casteEditMenu.instance()
-	get_parent().ConnectCasteEditMenuSignals(casteEditMenu)
+var treasury = 500	#this is the initial amount in the treasury
+var turn = 1
 
+var numberOfCastesInRow = 1
+var startingX = 100
+var startingY = 200
+
+var casteTemporaryApprovalChanges = []
+var temporaryMilPointChanges = []
+var temporaryPolPointChanges = []
+
+func _ready():
+	var turnLabelText = "Turn: "+str(turn)
+	$TurnLabel.text = turnLabelText
+
+	var treasuryLabelText = "Treasury: "+str(treasury)
+	$TreasuryLabel.text = treasuryLabelText
+
+
+	casteEditMenu = casteEditMenu.instance()
+	casteEditMenu.connect("UserIsDoneWithCasteEditMenu", self, "HideCasteEditMenu")
+
+	casteEditMenu.connect("UserWantsToDeleteCaste", self, "DeleteCasteAndCloseEditMenu")
+	get_parent().ConnectCasteEditMenuSignals(casteEditMenu)
 	add_child(casteEditMenu)
 	get_node("CasteEditMenu").HideMyStuff()
+
+	randomEventMenu = randomEventMenu.instance()
+	randomEventMenu.connect("UserDoneWithRandomEventMenu", self, "HideRandomEventMenu")
+	add_child(randomEventMenu)
+	get_node("RandomEventMenu").HideMyStuff()
+
+
+func DeleteCasteAndCloseEditMenu(casteID):
+	#hide casteEditMenu
+	get_node("CasteEditMenu").HideMyStuff()
+
+	#remove the caste
+	var casteToRemove = 0
+	for x in range(0,len(casteList)):
+		if casteList[x].GetID() == casteID:
+			casteToRemove = casteList[x]
+
+	casteList.erase(casteToRemove)
+
+	#update all castes after this change
+	ResetCastesAfterChange()
+
+func HideCasteEditMenu():
+	get_node("CasteEditMenu").HideMyStuff()
+
+func HideRandomEventMenu():
+	get_node("RandomEventMenu").HideMyStuff()
 
 func Init(econPoints, polPoints, milPoints):
 	$EconomyPointsLabel.text = "Economy Points: "+str(econPoints)
@@ -39,7 +88,22 @@ func AddNewlyCreatedCaste(newCasteInfo):
 
 	newCaste.Init(newCasteInfo)
 	newCaste.CalculateRightsApproval()
-	newCaste.rect_global_position = Vector2(100,100)
+
+
+
+	if numberOfCastesInRow == 1:
+		newCaste.rect_global_position = Vector2(startingX,startingY)
+	elif numberOfCastesInRow == 2:
+		newCaste.rect_global_position = Vector2(startingX+200,startingY)
+	elif numberOfCastesInRow == 3:
+		newCaste.rect_global_position = Vector2(startingX+400,startingY)
+
+
+	numberOfCastesInRow += 1
+	if numberOfCastesInRow == 4:
+		startingY += 200
+		numberOfCastesInRow = 1
+
 	newCaste.connect("UserWantsToEditCaste", self, "DoEditCasteMenu")
 
 
@@ -430,3 +494,120 @@ func DoEditCasteMenu(casteInfo, casteID):
 
 func _on_CreateCasteButton_pressed():
 	emit_signal("UserWantsToCreateCaste")
+
+func HandleRandomEvent(event):
+	#event values in the order:
+	#treasury adjustment, random caste adjustment, mil point change(temp), pol point change(temp)
+	var values = event.GetValues()
+
+	#adjust the treasury
+	treasury += int(values[0])
+
+	#if there is an amount to adjust a random caste by, adjust a random caste
+	if int(values[1]) == 0:
+		#no change, ignore
+		pass
+	else:
+		#there is a change, pick a random caste and apply the change to it
+		var rng = RandomNumberGenerator.new()
+		rng.randomize()
+		var randomCasteIndex = rng.randi_range(0, len(casteList)-1)	#max inclusive
+		var randomCasteID = casteList[randomCasteIndex].GetID()
+
+		for x in range(0,len(casteList)):
+			if casteList[x].GetID() == randomCasteID:
+				#casteTemporaryApprovalChanges
+				var old = casteList[x].GetRightsApproval()
+				var new = old + int(values[1])
+				casteList[x].SetRightsApproval(new)
+				casteTemporaryApprovalChanges.append([int(values[1]), turn+5, randomCasteID])	#in 5 turns this will be undone
+
+
+	#do temp military point change
+
+	milPopAndApprovalList[1] += int(values[2])	#the first one at [1] is approval
+	temporaryMilPointChanges.append([turn+5, int(values[2])])	#in 5 turns undo it
+
+
+	#do temp police point change
+
+	polPopAndApprovalList[1] += int(values[3])
+
+	temporaryPolPointChanges.append([turn+5, int(values[3])])
+
+
+func HandleRemovingTemporaryChanges():
+
+	#first check if any police point changes are due
+	var indexesToRemove = []
+	for x in range(0, len(temporaryPolPointChanges)):
+		var currentChange = temporaryPolPointChanges[x]
+		if currentChange[0] == turn:
+			#this change is due to be undone
+			polPopAndApprovalList[1] -= currentChange[1]
+			indexesToRemove.append([currentChange[0], currentChange[1]])
+
+	for x in indexesToRemove:
+		temporaryPolPointChanges.erase(x)
+
+
+	#next check if any military point changes are due
+	indexesToRemove = []
+	for x in range(0, len(temporaryMilPointChanges)):
+		var currentChange = temporaryMilPointChanges[x]
+		if currentChange[0] == turn:
+			#it's due to be undone
+			milPopAndApprovalList[1] -= currentChange[1]
+			indexesToRemove.append([currentChange[0], currentChange[1]])
+
+
+	for x in indexesToRemove:
+		temporaryPolPointChanges.erase(x)
+
+
+	#handle caste approval changes
+	#[int(values[1]), turn+5, randomCasteID]
+	indexesToRemove = []
+	for x in range(0, len(casteTemporaryApprovalChanges)):
+		var currentChange = casteTemporaryApprovalChanges[x]
+		if currentChange[1] == turn:
+			#it's due to be undone
+			UndoCasteTempApprovalChange(currentChange[2], currentChange[0])
+			indexesToRemove.append(currentChange)
+
+
+	for x in indexesToRemove:
+		casteTemporaryApprovalChanges.erase(x)
+
+
+
+
+func UndoCasteTempApprovalChange(casteID, value):
+
+	for x in range(0, len(casteList)):
+		if casteList[x].GetID() == casteID:
+			var old = casteList[x].GetRightsApproval()
+			var new = old - value
+			casteList[x].SetRightsApproval(new)
+
+func _on_EndTurnButton_pressed():
+	turn += 1
+	var turnLabelText = "Turn: "+str(turn)
+	$TurnLabel.text = turnLabelText
+
+	var randomEvent = Global.GetRandomEventAtRandom()
+	if typeof(randomEvent) == TYPE_OBJECT:
+		HandleRandomEvent(randomEvent)
+		get_node("RandomEventMenu").ShowMyStuff()
+		get_node("RandomEventMenu").ShowEvent(randomEvent)
+	else:
+		pass
+
+
+	#check if any temp changes need to be undone
+	HandleRemovingTemporaryChanges()
+
+	treasury += occupationPoints[0]	#econ points
+	var treasuryLabelText = "Treasury: "+str(treasury)
+	$TreasuryLabel.text = treasuryLabelText
+

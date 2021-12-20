@@ -10,6 +10,8 @@ var listOfSelections = []	#other things will copy from here and make changes to 
 var listOfRights = []
 var listOfOccupations = []
 
+var listOfRandomEvents = []
+
 var populationSize = 1000
 
 
@@ -78,6 +80,30 @@ func GetListOfOccupations():
 
 func SetListOfOccupations(newVal):
 	listOfOccupations = newVal
+
+func SetListOfRandomEvents(newVal):
+	listOfRandomEvents = newVal
+
+func GetRandomEventAtRandom():
+	#this will return a random random event
+	#if a certain random change is met
+
+	var minChance = 1
+	var maxChance = 4	#I will check if it's 4, this means there's basically a 1 in 4 chance of a random event
+
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var weatherOrNotToHaveEvent = rng.randi_range(minChance, maxChance)	#max inclusive
+
+	if weatherOrNotToHaveEvent == 4:
+		#get a random random event
+		var minEventIndex = 0
+		var maxEventIndex = len(listOfRandomEvents)-1
+		return listOfRandomEvents[rng.randi_range(minEventIndex, maxEventIndex)]
+
+	else:
+		return []	#empty list, used to tell that there will be no random event this turn
+
 
 func _ready():
 	pass

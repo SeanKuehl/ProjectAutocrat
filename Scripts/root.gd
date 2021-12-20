@@ -9,6 +9,8 @@ onready var rightMenu = load("res://Scenes/Rights/RightMenu.tscn")
 onready var occupationLoaderScript = load("res://Scripts/Occupations/OccupationsLoader.gd")
 onready var occupationMenu = load("res://Scenes/Occupations/OccupationMenu.tscn")
 
+onready var randomEventLoaderScript = load("res://Scripts/RandomEvents/RandomEventsLoader.gd")
+
 onready var basicInfoMenu = load("res://Scenes/Castes/CasteBasicInfoMenu.tscn")
 
 onready var mainMenu = load("res://Scenes/MainMenu/MainMenu.tscn")
@@ -49,6 +51,9 @@ func _ready():
 
 	occupationLoaderScript = occupationLoaderScript.new()
 	occupationLoaderScript.init()
+
+	randomEventLoaderScript = randomEventLoaderScript.new()
+	randomEventLoaderScript.init()
 
 
 
@@ -212,9 +217,9 @@ func FinishEditOfSelections():
 	#currentSelectionList
 
 	editingCaste = false
-	get_node("RightMenu").HideMyStuff()
+	get_node("SelectionMenu").HideMyStuff()
 
-	emit_signal("EditCasteRights", currentRightList, currentCasteID)
+	emit_signal("EditCasteSelections", currentSelectionList, currentCasteID)
 	#send the new name, desc and id back to main menu so it can edit the right caste
 	get_node("MainMenu").ShowMyStuff()
 
@@ -230,7 +235,7 @@ func FinishEditOfRights():
 	editingCaste = false
 	get_node("RightMenu").HideMyStuff()
 
-	emit_signal("EditCasteNameAndDesc", casteName, casteDescription, currentCasteID)
+	emit_signal("EditCasteRights", currentRightList, currentCasteID)
 	#send the new name, desc and id back to main menu so it can edit the right caste
 	get_node("MainMenu").ShowMyStuff()
 
