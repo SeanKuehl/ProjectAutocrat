@@ -2,12 +2,15 @@ extends CanvasLayer
 
 signal UserDoneWithBasicInfo(casteName, casteDesc)
 
+var currentNames = []
+
 func _ready():
 	pass
 
 func Clear():
 	$CasteName.text = ""
 	$CasteDesc.text = ""
+	currentNames = Global.GetCurrentCasteNames()
 
 func Init(casteName, casteDesc):
 	$CasteName.text = casteName
@@ -38,9 +41,17 @@ func _on_DoneButton_pressed():
 	var candidateName = $CasteName.text
 	var candidateDesc = $CasteDesc.text
 
-	#also check for duplicate names in future!
+	var duplicateName = false
 
-	if candidateName == "" or candidateName == " ":
+	for x in currentNames:
+		if candidateName == x:
+			#reject it, it's already in use
+			duplicateName = true
+
+
+	if duplicateName:
+		$ErrorMessage.text = "Sorry, that name's already in use"
+	elif candidateName == "" or candidateName == " ":
 		$ErrorMessage.text = "Sorry, that's not a valid name"
 	elif candidateDesc == "" or candidateDesc == " ":
 		$ErrorMessage.text = "Sorry, that's not a valid description"

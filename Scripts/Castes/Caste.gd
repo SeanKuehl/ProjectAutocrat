@@ -62,6 +62,7 @@ func HideMyStuff():
 	$Panel.hide()
 	$NameLabel.hide()
 	$EditButton.hide()
+	$ViewButton.hide()
 
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -70,6 +71,7 @@ func ShowMyStuff():
 	$Panel.show()
 	$NameLabel.show()
 	$EditButton.show()
+	$ViewButton.show()
 
 	mouse_filter = Control.MOUSE_FILTER_STOP
 

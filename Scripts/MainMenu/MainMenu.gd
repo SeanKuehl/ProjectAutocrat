@@ -587,6 +587,14 @@ func DoEditCasteMenu(casteInfo, casteID):
 	get_node("CasteEditMenu").Init(casteInfo)
 
 func _on_CreateCasteButton_pressed():
+
+	#make list of current caste names
+	var listToFill = []
+	for x in range(0,len(casteList)):
+		listToFill.append(casteList[x].GetName())
+
+	Global.SetCurrentCasteNames(listToFill)
+
 	emit_signal("UserWantsToCreateCaste")
 
 func HandleRandomEvent(event):

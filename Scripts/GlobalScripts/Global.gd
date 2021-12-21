@@ -13,8 +13,16 @@ var listOfOccupations = []
 var listOfRandomEvents = []
 var listOfWars = []
 
+var currentCasteNames = []
+
 var populationSize = 1000
 
+
+func GetCurrentCasteNames():
+	return currentCasteNames
+
+func SetCurrentCasteNames(newVal):
+	currentCasteNames = newVal
 
 func GetPopulationSize():
 	return populationSize
