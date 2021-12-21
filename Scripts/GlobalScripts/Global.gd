@@ -11,6 +11,7 @@ var listOfRights = []
 var listOfOccupations = []
 
 var listOfRandomEvents = []
+var listOfWars = []
 
 var populationSize = 1000
 
@@ -80,6 +81,31 @@ func GetListOfOccupations():
 
 func SetListOfOccupations(newVal):
 	listOfOccupations = newVal
+
+func SetListOfWars(newVal):
+	listOfWars = newVal
+
+func GetRandomWar(playerMilPoints):
+	#this will return a random war if
+	#a certain random change is met
+
+	#change is one in ten
+	var minChance = 1
+	var maxChance = 10
+
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
+	var weatherOrNotToHaveWar = rng.randi_range(minChance, maxChance)	#max inclusive
+
+	if weatherOrNotToHaveWar == 10:
+		#get a random war
+		var minWarIndex = 0
+		var maxWarIndex = len(listOfWars)-1
+		var war = listOfWars[rng.randi_range(minWarIndex, maxWarIndex)]
+		war.SetMilitaryPoints(playerMilPoints)
+		return war
+	else:
+		return []	#empty list, used to tell that there will be no random event this turn
 
 func SetListOfRandomEvents(newVal):
 	listOfRandomEvents = newVal

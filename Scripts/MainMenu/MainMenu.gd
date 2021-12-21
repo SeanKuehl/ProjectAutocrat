@@ -8,6 +8,8 @@ onready var randomEventMenu = load("res://Scenes/RandomEvents/RandomEventMenu.ts
 
 onready var casteViewMenu = load("res://Scenes/Castes/CasteViewMenu.tscn")
 
+onready var warMenu = load("res://Scenes/Wars/WarMenu.tscn")
+
 signal UserWantsToCreateCaste()
 
 var casteName = ""
@@ -36,6 +38,9 @@ var temporaryPolPointChanges = []
 
 var casteScrollIndex = 0
 
+var warIsActive = false
+var currentWar = 0
+
 func _ready():
 	var turnLabelText = "Turn: "+str(turn)
 	$TurnLabel.text = turnLabelText
@@ -61,6 +66,15 @@ func _ready():
 	randomEventMenu.connect("UserDoneWithRandomEventMenu", self, "HideRandomEventMenu")
 	add_child(randomEventMenu)
 	get_node("RandomEventMenu").HideMyStuff()
+
+	warMenu = warMenu.instance()
+	warMenu.connect("UserDonwWithWarMenu", self, "HideWarMenu")
+	add_child(warMenu)
+	get_node("WarMenu").HideMyStuff()
+
+
+func HideWarMenu():
+	get_node("WarMenu").HideMyStuff()
 
 
 func DeleteCasteAndCloseEditMenu(casteID):
@@ -660,6 +674,40 @@ func HandleRemovingTemporaryChanges():
 		casteTemporaryApprovalChanges.erase(x)
 
 
+func HandleRandomWar():
+	#if our military points are equal to or greater than theirs, decrease turns left by 1
+	#a random caste a negative approval penalty(temporarily)
+
+	#first if your military points are equal or greater than war's, decrement it by  a turn
+	var warPoints = currentWar.GetMilitaryPoints()
+	var yourPoints = occupationPoints[2]
+
+	var negativePenaltyToCaste = -2
+
+	if yourPoints >= warPoints:
+		currentWar.SetTurnsLeft(currentWar.GetTurnsLeft()-1)
+
+	#if war is over, clear it
+	if currentWar.GetTurnsLeft() == 0:
+		warIsActive = false
+		get_node("WarMenu").ShowMyStuff()
+		get_node("WarMenu").ShowEndOfWar(currentWar)
+		currentWar = 0
+
+	else:
+		#do negative thing for a random caste
+		var minCasteIndex = 0
+		var maxCasteIndex = len(casteList)-1
+		var rng = RandomNumberGenerator.new()
+		rng.randomize()
+		var randomCasteIndex = rng.randi_range(minCasteIndex, maxCasteIndex)
+
+		var newValue = casteList[randomCasteIndex].GetRightsApproval() + negativePenaltyToCaste
+
+		casteList[randomCasteIndex].SetRightsApproval(newValue)
+		casteTemporaryApprovalChanges.append([negativePenaltyToCaste, turn+5, casteList[randomCasteIndex].GetID()])
+
+
 
 
 func UndoCasteTempApprovalChange(casteID, value):
@@ -683,6 +731,19 @@ func _on_EndTurnButton_pressed():
 	else:
 		pass
 
+	if warIsActive:
+		#don't have two wars at the same time, just process current one
+		HandleRandomWar()
+	else:
+
+		var randomWar = Global.GetRandomWar(occupationPoints[2])
+		if typeof(randomWar) == TYPE_OBJECT:
+			currentWar = randomWar
+			warIsActive = true
+			get_node("WarMenu").ShowMyStuff()
+			get_node("WarMenu").ShowWarStarted(randomWar)
+		else:
+			pass
 
 	#check if any temp changes need to be undone
 	HandleRemovingTemporaryChanges()

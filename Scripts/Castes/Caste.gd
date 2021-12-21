@@ -40,6 +40,9 @@ func CalculateRightsApproval():
 func GetRightsApproval():
 	return rightsApproval
 
+func SetRightsApproval(newVal):
+	rightsApproval = newVal
+
 func GetRelativeApproval():
 	return relativeApproval
 

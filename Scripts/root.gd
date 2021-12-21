@@ -11,6 +11,8 @@ onready var occupationMenu = load("res://Scenes/Occupations/OccupationMenu.tscn"
 
 onready var randomEventLoaderScript = load("res://Scripts/RandomEvents/RandomEventsLoader.gd")
 
+onready var warLoaderScript = load("res://Scripts/Wars/WarsLoader.gd")
+
 onready var basicInfoMenu = load("res://Scenes/Castes/CasteBasicInfoMenu.tscn")
 
 onready var mainMenu = load("res://Scenes/MainMenu/MainMenu.tscn")
@@ -54,6 +56,9 @@ func _ready():
 
 	randomEventLoaderScript = randomEventLoaderScript.new()
 	randomEventLoaderScript.init()
+
+	warLoaderScript = warLoaderScript.new()
+	warLoaderScript.init()
 
 
 
