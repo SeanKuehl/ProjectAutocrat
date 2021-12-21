@@ -6,7 +6,8 @@
 script = ExtResource( 1 )
 
 [node name="Panel" type="Panel" parent="."]
-margin_right = 1032.0
+margin_left = -1.1225
+margin_right = 1030.88
 margin_bottom = 608.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -76,5 +77,36 @@ margin_bottom = 552.761
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CasteBackButton" type="Button" parent="."]
+margin_left = 37.0412
+margin_top = 255.921
+margin_right = 117.041
+margin_bottom = 301.921
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteNextButton" type="Button" parent="."]
+margin_left = 909.051
+margin_top = 267.225
+margin_right = 980.051
+margin_bottom = 310.225
+text = "Next"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FirstPos" type="Position2D" parent="."]
+position = Vector2( 188.573, 283.983 )
+
+[node name="SecondPos" type="Position2D" parent="."]
+position = Vector2( 475.924, 285.105 )
+
+[node name="ThirdPos" type="Position2D" parent="."]
+position = Vector2( 734.09, 287.35 )
 [connection signal="pressed" from="CreateCasteButton" to="." method="_on_CreateCasteButton_pressed"]
 [connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]
+[connection signal="pressed" from="CasteBackButton" to="." method="_on_CasteBackButton_pressed"]
+[connection signal="pressed" from="CasteNextButton" to="." method="_on_CasteNextButton_pressed"]

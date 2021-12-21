@@ -32,6 +32,8 @@ var casteTemporaryApprovalChanges = []
 var temporaryMilPointChanges = []
 var temporaryPolPointChanges = []
 
+var casteScrollIndex = 0
+
 func _ready():
 	var turnLabelText = "Turn: "+str(turn)
 	$TurnLabel.text = turnLabelText
@@ -91,18 +93,7 @@ func AddNewlyCreatedCaste(newCasteInfo):
 
 
 
-	if numberOfCastesInRow == 1:
-		newCaste.rect_global_position = Vector2(startingX,startingY)
-	elif numberOfCastesInRow == 2:
-		newCaste.rect_global_position = Vector2(startingX+200,startingY)
-	elif numberOfCastesInRow == 3:
-		newCaste.rect_global_position = Vector2(startingX+400,startingY)
 
-
-	numberOfCastesInRow += 1
-	if numberOfCastesInRow == 4:
-		startingY += 200
-		numberOfCastesInRow = 1
 
 	newCaste.connect("UserWantsToEditCaste", self, "DoEditCasteMenu")
 
@@ -111,8 +102,53 @@ func AddNewlyCreatedCaste(newCasteInfo):
 	ResetCastesAfterChange()
 
 
-
 	add_child(newCaste)
+
+
+func UpdateCasteScroll():
+	var lengthOfCasteList = len(casteList)
+	var numOfSlots = 3
+	#also do similar for when caste is deleted!
+
+	#hide all castes, so that only those I want to show show
+	for x in range(0,len(casteList)):
+		casteList[x].HideMyStuff()
+
+
+	#there are three slots, first pos, second pos and third pos
+	if lengthOfCasteList <= numOfSlots:
+		#just place them
+		for x in range(0, lengthOfCasteList):
+			if x == 0:
+				casteList[x].rect_global_position = $FirstPos.global_position
+				casteList[x].ShowMyStuff()
+			elif x == 1:
+
+				casteList[x].rect_global_position = $SecondPos.global_position
+				casteList[x].ShowMyStuff()
+			elif x == 2:
+				casteList[x].rect_global_position = $ThirdPos.global_position
+				casteList[x].ShowMyStuff()
+	else:
+		#place as many as possible based on the caste scroll index
+		var tempScrollIndex = casteScrollIndex
+
+		if tempScrollIndex < lengthOfCasteList:
+			casteList[tempScrollIndex].rect_global_position = $FirstPos.global_position
+			casteList[tempScrollIndex].ShowMyStuff()
+			tempScrollIndex += 1
+
+		if tempScrollIndex < lengthOfCasteList:
+			casteList[tempScrollIndex].rect_global_position = $SecondPos.global_position
+			casteList[tempScrollIndex].ShowMyStuff()
+			tempScrollIndex += 1
+
+		if tempScrollIndex < lengthOfCasteList:
+			casteList[tempScrollIndex].rect_global_position = $ThirdPos.global_position
+			casteList[tempScrollIndex].ShowMyStuff()
+
+
+
 
 
 
@@ -286,6 +322,8 @@ func ResetCastesAfterChange():
 	$PolicePointsLabel.text = "Police Points: "+str(occupationPoints[1])
 	$MilitaryPointsLabel.text = "Military Points: "+str(occupationPoints[2])
 
+	UpdateCasteScroll()
+
 	for x in range(0,len(casteList)):
 		print(casteList[x].GetName())
 		print(casteList[x].GetRightsApproval())
@@ -445,7 +483,17 @@ func HideMyStuff():
 	$EconomyPointsLabel.hide()
 	$PolicePointsLabel.hide()
 	$MilitaryPointsLabel.hide()
+	$TurnLabel.hide()
+	$TreasuryLabel.hide()
 	$CreateCasteButton.hide()
+	$EndTurnButton.hide()
+
+	$CasteBackButton.hide()
+	$CasteNextButton.hide()
+	$FirstPos.hide()
+	$SecondPos.hide()
+	$ThirdPos.hide()
+
 
 	#hide the castes
 	for x in range(0,len(casteList)):
@@ -456,7 +504,17 @@ func ShowMyStuff():
 	$EconomyPointsLabel.show()
 	$PolicePointsLabel.show()
 	$MilitaryPointsLabel.show()
+	$TurnLabel.show()
+	$TreasuryLabel.show()
 	$CreateCasteButton.show()
+	$EndTurnButton.show()
+
+	$CasteBackButton.show()
+	$CasteNextButton.show()
+	$FirstPos.show()
+	$SecondPos.show()
+	$ThirdPos.show()
+
 
 	#show the castes
 	for x in range(0,len(casteList)):
@@ -610,4 +668,44 @@ func _on_EndTurnButton_pressed():
 	treasury += occupationPoints[0]	#econ points
 	var treasuryLabelText = "Treasury: "+str(treasury)
 	$TreasuryLabel.text = treasuryLabelText
+
+
+
+func _on_CasteBackButton_pressed():
+
+	var numOfSlots = 3
+	var decrementAmount = 3
+
+	if len(casteList) <= numOfSlots:
+		#don't do anything
+		pass
+	else:
+		if (casteScrollIndex-decrementAmount) >= 0:
+			casteScrollIndex = casteScrollIndex-decrementAmount
+		else:
+			pass
+
+	UpdateCasteScroll()
+
+
+func _on_CasteNextButton_pressed():
+	var numOfSlots = 3
+	var incrementAmount = 3
+
+	if len(casteList) <= numOfSlots:
+		#don't do anything
+		pass
+	else:
+		if (casteScrollIndex+incrementAmount) < (len(casteList)+incrementAmount):
+			#it should be less than because if there are 4 castes we need a seperate screen of 1
+			#to show it, but still need our scroll index to go out far enough to include it
+			casteScrollIndex = casteScrollIndex+incrementAmount
+		else:
+			pass
+
+	UpdateCasteScroll()
+
+
+
+
 
