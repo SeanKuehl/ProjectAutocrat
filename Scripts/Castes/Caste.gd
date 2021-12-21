@@ -19,7 +19,7 @@ var infoList = []
 var ID = -1
 
 signal UserWantsToEditCaste(casteInfo, casteID)
-
+signal UserWantsToViewCaste(casteID)
 
 func _ready():
 	pass
@@ -161,3 +161,8 @@ func _on_EditButton_pressed():
 
 	emit_signal("UserWantsToEditCaste", infoList, ID)
 
+
+
+func _on_ViewButton_pressed():
+	#only ID because we need some values like rights approval that we don't have in infoList
+	emit_signal("UserWantsToViewCaste", ID)

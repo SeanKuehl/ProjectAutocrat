@@ -26,8 +26,20 @@ margin_right = 272.0
 margin_bottom = 36.0
 
 [node name="EditButton" type="Button" parent="."]
-margin_left = 87.552
-margin_top = 75.2049
-margin_right = 181.552
-margin_bottom = 112.205
+margin_left = 16.2757
+margin_top = 81.3784
+margin_right = 110.276
+margin_bottom = 118.379
 text = "Edit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ViewButton" type="Button" parent="."]
+margin_left = 137.665
+margin_top = 81.4388
+margin_right = 231.665
+margin_bottom = 117.439
+text = "View"
+[connection signal="pressed" from="EditButton" to="." method="_on_EditButton_pressed"]
+[connection signal="pressed" from="ViewButton" to="." method="_on_ViewButton_pressed"]

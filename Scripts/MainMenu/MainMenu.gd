@@ -6,6 +6,8 @@ onready var casteEditMenu = load("res://Scenes/Castes/CasteEditMenu.tscn")
 
 onready var randomEventMenu = load("res://Scenes/RandomEvents/RandomEventMenu.tscn")
 
+onready var casteViewMenu = load("res://Scenes/Castes/CasteViewMenu.tscn")
+
 signal UserWantsToCreateCaste()
 
 var casteName = ""
@@ -49,6 +51,11 @@ func _ready():
 	get_parent().ConnectCasteEditMenuSignals(casteEditMenu)
 	add_child(casteEditMenu)
 	get_node("CasteEditMenu").HideMyStuff()
+
+	casteViewMenu = casteViewMenu.instance()
+	casteViewMenu.connect("UserDoneWithViewMenu", self, "HideViewCasteMenu()")
+	add_child(casteViewMenu)
+	get_node("CasteViewMenu").HideMyStuff()
 
 	randomEventMenu = randomEventMenu.instance()
 	randomEventMenu.connect("UserDoneWithRandomEventMenu", self, "HideRandomEventMenu")
@@ -96,13 +103,28 @@ func AddNewlyCreatedCaste(newCasteInfo):
 
 
 	newCaste.connect("UserWantsToEditCaste", self, "DoEditCasteMenu")
-
+	newCaste.connect("UserWantsToViewCaste", self, "DoViewCasteMenu")
 
 	casteList.append(newCaste)
 	ResetCastesAfterChange()
 
 
 	add_child(newCaste)
+
+
+func DoViewCasteMenu(casteID):
+	#get caste at id
+	var casteToGiveMenu = 0
+	for x in range(0,len(casteList)):
+		if casteList[x].GetID() == casteID:
+			casteToGiveMenu = casteList[x]
+
+	#now pass this to view caste menu
+	get_node("CasteViewMenu").Init(casteToGiveMenu)
+	get_node("CasteViewMenu").ShowMyStuff()
+
+func HideViewCasteMenu():
+	get_node("CasteViewMenu").HideMyStuff()
 
 
 func UpdateCasteScroll():
