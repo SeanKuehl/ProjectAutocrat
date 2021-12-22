@@ -10,6 +10,8 @@ onready var casteViewMenu = load("res://Scenes/Castes/CasteViewMenu.tscn")
 
 onready var warMenu = load("res://Scenes/Wars/WarMenu.tscn")
 
+onready var boostMenu = load("res://Scenes/BoostMenu/BoostMenu.tscn")
+
 signal UserWantsToCreateCaste()
 
 var casteName = ""
@@ -73,6 +75,61 @@ func _ready():
 	get_node("WarMenu").HideMyStuff()
 
 
+
+
+	boostMenu = boostMenu.instance()
+	boostMenu.connect("BoostMilitary", self, "BoostMilitaryApproval")
+	boostMenu.connect("BoostPolice", self, "BoostPoliceApproval")
+	boostMenu.connect("UserDoneWithBoostMenu", self, "HideBoostMenu")
+	boostMenu.connect("BoostCaste", self, "BoostCasteApproval")
+	add_child(boostMenu)
+	get_node("BoostMenu").HideMyStuff()
+
+
+#var old = casteList[x].GetRightsApproval()
+#				var new = old + int(values[1])
+#				casteList[x].SetRightsApproval(new)
+#				casteTemporaryApprovalChanges.append([int(values[1]), turn+5, randomCasteID])	#in 5 turns this will be undone
+#
+#
+#	#do temp military point change
+#
+#	milPopAndApprovalList[1] += int(values[2])	#the first one at [1] is approval
+#	temporaryMilPointChanges.append([turn+5, int(values[2])])	#in 5 turns undo it
+#
+#
+#	#do temp police point change
+#
+#	polPopAndApprovalList[1] += int(values[3])
+#
+#	temporaryPolPointChanges.append([turn+5, int(values[3])])
+
+
+func BoostMilitaryApproval():
+	milPopAndApprovalList[1] += 5	#1 is the index of approval in the list
+	temporaryMilPointChanges.append([turn+5, 5])
+	get_node("BoostMenu").HideMyStuff()
+
+func BoostPoliceApproval():
+	polPopAndApprovalList[1] += 5	#1 is the index of approval in the list
+	temporaryPolPointChanges.append([turn+5, 5])
+	get_node("BoostMenu").HideMyStuff()
+
+func BoostCasteApproval(casteName):
+
+	for x in range(0,len(casteList)):
+		if casteList[x].GetName() == casteName:
+			var old = casteList[x].GetRightsApproval()
+			var new = old + 5
+			casteList[x].SetRightsApproval(new)
+			casteTemporaryApprovalChanges.append([5, turn+5, casteList[x].GetID()])	#in 5 turns this will be undone
+
+	get_node("BoostMenu").HideMyStuff()
+
+func HideBoostMenu():
+	get_node("BoostMenu").HideMyStuff()
+
+
 func HideWarMenu():
 	get_node("WarMenu").HideMyStuff()
 
@@ -99,31 +156,84 @@ func HideRandomEventMenu():
 	get_node("RandomEventMenu").HideMyStuff()
 
 func Init(econPoints, polPoints, milPoints):
-	$EconomyPointsLabel.text = "Economy Points: "+str(econPoints)
-	$PolicePointsLabel.text = "Police Points: "+str(polPoints)
-	$MilitaryPointsLabel.text = "Military Points: "+str(milPoints)
+
+
+
+	$EconomyPointsLabel.text = "Economy Points: "+str(econPoints)	#don't need approval for this since it doesn't matter for overthrow
+	$PolicePointsLabel.text = "Police Points/Approval: "+str(polPoints)+" / "+str(polPopAndApprovalList[1])
+	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(milPoints)+" / "+str(milPopAndApprovalList[1])
 
 func AddNewlyCreatedCaste(newCasteInfo):
 
+	var isCasteDuplicateOfAnother = CheckIfCasteIsDuplicate(newCasteInfo[2])	#this is the index of the selection list
+
+	if isCasteDuplicateOfAnother:
+		pass
+	else:
+
+		var newCaste = caste.instance()
+
+		newCaste.Init(newCasteInfo)
+		newCaste.CalculateRightsApproval()
 
 
-	var newCaste = caste.instance()
-
-	newCaste.Init(newCasteInfo)
-	newCaste.CalculateRightsApproval()
 
 
 
+		newCaste.connect("UserWantsToEditCaste", self, "DoEditCasteMenu")
+		newCaste.connect("UserWantsToViewCaste", self, "DoViewCasteMenu")
+
+		casteList.append(newCaste)
+		ResetCastesAfterChange()
 
 
-	newCaste.connect("UserWantsToEditCaste", self, "DoEditCasteMenu")
-	newCaste.connect("UserWantsToViewCaste", self, "DoViewCasteMenu")
-
-	casteList.append(newCaste)
-	ResetCastesAfterChange()
+		add_child(newCaste)
 
 
-	add_child(newCaste)
+func CheckIfCasteIsDuplicate(listOfSelections):
+	#compare this selection list with that of each caste currently in caste list
+	#if there are any duplicates then reject the new caste(return true)
+	#and give user a message saying what it conflicts with
+	#otherwise it's fine(return false)
+	var isDuplicate = false
+	var nameOfCurrentConflictingCaste = ""
+	var sameSoFar = true
+
+	for caste in casteList:
+		var selectionsToCheck = caste.GetSelections()
+		print(selectionsToCheck)
+		for x in range(0, len(selectionsToCheck)):
+			var currentIncumbentSelection = selectionsToCheck[x].GetChosenValues()
+			var currentChallengerSelection = listOfSelections[x].GetChosenValues()
+			#they're both references, this needs to be fixed for them to work
+
+
+			for i in range(0,len(currentIncumbentSelection)):
+
+				if currentIncumbentSelection[i] == currentChallengerSelection[i]:
+					#they are the same so far, no change
+					pass
+				else:
+					sameSoFar = false
+					break
+
+			if sameSoFar == false:
+				sameSoFar = true	#reset for next caste
+				break
+
+		if sameSoFar:
+			#caste was duplicate of another
+			isDuplicate = true
+			nameOfCurrentConflictingCaste = caste.GetName()
+			#send message about conflict to the screen
+			$WarningLabel.text = "Caste wasn't added because it conflict with "+nameOfCurrentConflictingCaste
+
+
+
+	#return isDuplicate to inform AddCaste how to proceed
+
+	return isDuplicate
+
 
 
 func DoViewCasteMenu(casteID):
@@ -336,6 +446,15 @@ func ResolveIndividualConflict(casteOne, casteTwo):
 			#it's not a conflict, don't need to change anything
 			pass
 
+func HandleCostOfRights():
+
+	var totalCostOfAllRights = 0
+	for x in range(0,len(casteList)):
+		totalCostOfAllRights += casteList[x].CalculateCostOfRights()
+
+	#subtract this amount from economy points
+	occupationPoints[0] -= totalCostOfAllRights	#zero is the index of economy points
+
 #call this function when a new caste is added or an old one is changed
 func ResetCastesAfterChange():
 	for x in range(0,len(casteList)):
@@ -354,9 +473,13 @@ func ResetCastesAfterChange():
 
 	GetOccupationPopPointsAndApproval()
 
-	$EconomyPointsLabel.text = "Economy Points: "+str(occupationPoints[0])
-	$PolicePointsLabel.text = "Police Points: "+str(occupationPoints[1])
-	$MilitaryPointsLabel.text = "Military Points: "+str(occupationPoints[2])
+	HandleCostOfRights()
+
+	$EconomyPointsLabel.text = "Economy Points: "+str(occupationPoints[0])	#don't need approval for this since it doesn't matter for overthrow
+	$PolicePointsLabel.text = "Police Points/Approval: "+str(occupationPoints[1])+" / "+str(polPopAndApprovalList[1])
+	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(occupationPoints[2])+" / "+str(milPopAndApprovalList[1])
+
+
 
 	UpdateCasteScroll()
 
@@ -523,6 +646,8 @@ func HideMyStuff():
 	$TreasuryLabel.hide()
 	$CreateCasteButton.hide()
 	$EndTurnButton.hide()
+	$WarningLabel.hide()
+	$BoostMenuButton.hide()
 
 	$CasteBackButton.hide()
 	$CasteNextButton.hide()
@@ -544,6 +669,9 @@ func ShowMyStuff():
 	$TreasuryLabel.show()
 	$CreateCasteButton.show()
 	$EndTurnButton.show()
+	$WarningLabel.show()
+
+	$BoostMenuButton.show()
 
 	$CasteBackButton.show()
 	$CasteNextButton.show()
@@ -726,39 +854,78 @@ func UndoCasteTempApprovalChange(casteID, value):
 			var new = old - value
 			casteList[x].SetRightsApproval(new)
 
+func CheckIfEndTurnRequirementsMet():
+	#warn user and don't let them end turn if
+	#pol or mil populations are 0 or not everyone is in a caste
+
+	var canEndTurn = true
+
+	#check if there's a police and military
+	if milPopAndApprovalList[0] == 0 or polPopAndApprovalList[0] == 0:
+		canEndTurn = false
+		$WarningLabel.text = "Can't end turn, there's no military or police!"
+
+	#check if all people are in a caste
+	var totalPopInCaste = 0
+	for x in range(0,len(casteList)):
+		totalPopInCaste += casteList[x].GetAmountOfPeopleInCaste()
+
+	var totalPop = Global.GetPopulationSize()
+
+	if totalPop > totalPopInCaste:
+		canEndTurn = false
+		$WarningLabel.text = "Can't end turn, not everyone is in a caste!"
+
+
+func CheckForOverThrowConditions():
+	var overthrown = false
+	#if military or police approval is -5 or lower than tell them they've been overthrown and lost
+	if milPopAndApprovalList[1] <= -5 or polPopAndApprovalList[1] <= -5:
+		$WarningLabel.text = "Military or Police approval too low, you've been overthrown"
+		overthrown = true
+
+	return overthrown
+
+
 func _on_EndTurnButton_pressed():
-	turn += 1
-	var turnLabelText = "Turn: "+str(turn)
-	$TurnLabel.text = turnLabelText
 
-	var randomEvent = Global.GetRandomEventAtRandom()
-	if typeof(randomEvent) == TYPE_OBJECT:
-		HandleRandomEvent(randomEvent)
-		get_node("RandomEventMenu").ShowMyStuff()
-		get_node("RandomEventMenu").ShowEvent(randomEvent)
-	else:
-		pass
+	var canEndTurn = CheckIfEndTurnRequirementsMet()
+	var overthrown = CheckForOverThrowConditions()
 
-	if warIsActive:
-		#don't have two wars at the same time, just process current one
-		HandleRandomWar()
-	else:
+	if canEndTurn or overthrown == false:
 
-		var randomWar = Global.GetRandomWar(occupationPoints[2])
-		if typeof(randomWar) == TYPE_OBJECT:
-			currentWar = randomWar
-			warIsActive = true
-			get_node("WarMenu").ShowMyStuff()
-			get_node("WarMenu").ShowWarStarted(randomWar)
+		turn += 1
+		var turnLabelText = "Turn: "+str(turn)
+		$TurnLabel.text = turnLabelText
+
+		var randomEvent = Global.GetRandomEventAtRandom()
+		if typeof(randomEvent) == TYPE_OBJECT:
+			HandleRandomEvent(randomEvent)
+			get_node("RandomEventMenu").ShowMyStuff()
+			get_node("RandomEventMenu").ShowEvent(randomEvent)
 		else:
 			pass
 
-	#check if any temp changes need to be undone
-	HandleRemovingTemporaryChanges()
+		if warIsActive:
+			#don't have two wars at the same time, just process current one
+			HandleRandomWar()
+		else:
 
-	treasury += occupationPoints[0]	#econ points
-	var treasuryLabelText = "Treasury: "+str(treasury)
-	$TreasuryLabel.text = treasuryLabelText
+			var randomWar = Global.GetRandomWar(occupationPoints[2])
+			if typeof(randomWar) == TYPE_OBJECT:
+				currentWar = randomWar
+				warIsActive = true
+				get_node("WarMenu").ShowMyStuff()
+				get_node("WarMenu").ShowWarStarted(randomWar)
+			else:
+				pass
+
+		#check if any temp changes need to be undone
+		HandleRemovingTemporaryChanges()
+
+		treasury += occupationPoints[0]	#econ points
+		var treasuryLabelText = "Treasury: "+str(treasury)
+		$TreasuryLabel.text = treasuryLabelText
 
 
 
@@ -799,4 +966,19 @@ func _on_CasteNextButton_pressed():
 
 
 
+
+
+
+func _on_BoostMenuButton_pressed():
+	#get military and police approval, caste names and approval, as well as turn
+
+	var casteNamesAndApprovals = []
+	for x in range(0,len(casteList)):
+		var temp = [casteList[x].GetName(), casteList[x].GetTotalApproval()]
+		casteNamesAndApprovals.append(temp)
+
+	var listToPass = [milPopAndApprovalList[1],polPopAndApprovalList[1], casteNamesAndApprovals, turn]
+
+	get_node("BoostMenu").Init(listToPass)
+	get_node("BoostMenu").ShowMyStuff()
 

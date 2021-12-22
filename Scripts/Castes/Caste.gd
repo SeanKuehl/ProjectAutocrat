@@ -49,6 +49,9 @@ func GetRelativeApproval():
 func SetRelativeApproval(newValue):
 	relativeApproval = newValue
 
+func GetTotalApproval():
+	return (rightsApproval+relativeApproval)
+
 func GetID():
 	return ID
 
@@ -57,6 +60,23 @@ func SetAmountOfPeopleInCaste(newValue):
 
 func GetAmountOfPeopleInCaste():
 	return amountOfPeopleInCaste
+
+func CalculateCostOfRights():
+	#(people in caste / 100) * sum of positive rights = cost of rights
+	#it costs money to give out posititve rights
+	var totalCostOfRights = 0
+
+	for x in range(0,len(rightsList)):
+		var doubleValues = rightsList[x].GetDoubleValues()
+		var indexOfValueToAdd = rightsList[x].GetChosenIndex()
+
+		#if it's a posititve right, add it
+		if float(doubleValues[indexOfValueToAdd]) > 0:
+
+			totalCostOfRights += float(doubleValues[indexOfValueToAdd])
+
+	totalCostOfRights = (GetAmountOfPeopleInCaste()/100) * totalCostOfRights
+	return totalCostOfRights
 
 func HideMyStuff():
 	$Panel.hide()
@@ -116,7 +136,7 @@ func SetSelections(passedSelections):
 	#selectionsList = passedSelections
 
 func GetSelections():
-	return selectionsList
+	return DerefSelectionsList(selectionsList)
 
 func SetRights(passedRights):
 	rightsList = passedRights
@@ -127,10 +147,8 @@ func SetOccupations(passedOccupations):
 
 
 func Init(newCasteInfo):
-	print(infoList)
-	var temp = newCasteInfo[2]
-	for selection in temp:
-		print(selection.GetChosenValues())
+
+
 
 	casteName = newCasteInfo[0]
 	casteDesc = newCasteInfo[1]

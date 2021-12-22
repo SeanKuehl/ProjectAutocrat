@@ -70,10 +70,10 @@ __meta__ = {
 }
 
 [node name="TreasuryLabel" type="Label" parent="."]
-margin_left = 123.471
-margin_top = 492.761
-margin_right = 255.471
-margin_bottom = 552.761
+margin_left = 223.37
+margin_top = 495.006
+margin_right = 355.37
+margin_bottom = 555.006
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -106,7 +106,28 @@ position = Vector2( 475.924, 285.105 )
 
 [node name="ThirdPos" type="Position2D" parent="."]
 position = Vector2( 734.09, 287.35 )
+
+[node name="WarningLabel" type="Label" parent="."]
+margin_left = 53.8782
+margin_top = 497.251
+margin_right = 176.878
+margin_bottom = 564.25
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BoostMenuButton" type="Button" parent="."]
+margin_left = 437.76
+margin_top = 111.124
+margin_right = 540.76
+margin_bottom = 164.124
+text = "Boosts"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="CreateCasteButton" to="." method="_on_CreateCasteButton_pressed"]
 [connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]
 [connection signal="pressed" from="CasteBackButton" to="." method="_on_CasteBackButton_pressed"]
 [connection signal="pressed" from="CasteNextButton" to="." method="_on_CasteNextButton_pressed"]
+[connection signal="pressed" from="BoostMenuButton" to="." method="_on_BoostMenuButton_pressed"]

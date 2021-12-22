@@ -34,6 +34,9 @@ func GetNewCasteID():
 func SetListOfSelections(newValue):
 	listOfSelections = newValue
 
+
+
+
 func GetListOfSelections():
 
 

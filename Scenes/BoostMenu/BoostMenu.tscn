@@ -1,0 +1,107 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/BoostMenu/BoostMenu.gd" type="Script" id=1]
+
+[node name="BoostMenu" type="CanvasLayer"]
+script = ExtResource( 1 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = 1.12244
+margin_top = 2.2449
+margin_right = 1037.12
+margin_bottom = 611.245
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemList" type="ItemList" parent="."]
+margin_left = 691.436
+margin_top = 110.001
+margin_right = 952.436
+margin_bottom = 342.001
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MilitaryMessage" type="Label" parent="."]
+margin_left = 73.0
+margin_top = 148.0
+margin_right = 225.0
+margin_bottom = 229.0
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PoliceMessage" type="Label" parent="."]
+margin_left = 355.82
+margin_top = 148.165
+margin_right = 503.82
+margin_bottom = 229.165
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MilitaryButton" type="Button" parent="."]
+margin_left = 85.3071
+margin_top = 249.186
+margin_right = 200.307
+margin_bottom = 300.186
+text = "Boost by 5"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PoliceButton" type="Button" parent="."]
+margin_left = 365.615
+margin_top = 250.367
+margin_right = 482.615
+margin_bottom = 306.367
+text = "Boost by 5"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CasteButton" type="Button" parent="."]
+margin_left = 777.866
+margin_top = 380.515
+margin_right = 870.866
+margin_bottom = 436.515
+text = "Boost by 5"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoLabel" type="Label" parent="."]
+margin_left = 184.0
+margin_top = 26.0
+margin_right = 649.0
+margin_bottom = 95.0
+text = "Once you boost something it will last 5 turns and you cannot do that boost again until it expires!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DoneButton" type="Button" parent="."]
+margin_left = 416.433
+margin_top = 498.373
+margin_right = 518.433
+margin_bottom = 549.373
+text = "Done"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WarningLabel" type="Label" parent="."]
+margin_left = 107.0
+margin_top = 345.0
+margin_right = 472.0
+margin_bottom = 440.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="MilitaryButton" to="." method="_on_MilitaryButton_pressed"]
+[connection signal="pressed" from="PoliceButton" to="." method="_on_PoliceButton_pressed"]
+[connection signal="pressed" from="CasteButton" to="." method="_on_CasteButton_pressed"]
+[connection signal="pressed" from="DoneButton" to="." method="_on_DoneButton_pressed"]
