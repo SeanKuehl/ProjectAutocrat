@@ -17,6 +17,7 @@ _global_script_class_icons={
 
 config/name="ProjectAutocrat"
 run/main_scene="res://Scenes/root.tscn"
+boot_splash/image="res://Assets/Images/AutocratLogo.png"
 config/icon="res://icon.png"
 
 [autoload]

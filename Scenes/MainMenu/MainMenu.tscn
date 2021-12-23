@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scripts/MainMenu/MainMenu.gd" type="Script" id=1]
+[ext_resource path="res://Themes/AutocratTheme.tres" type="Theme" id=2]
 
 [node name="MainMenu" type="CanvasLayer"]
 script = ExtResource( 1 )
@@ -9,6 +10,7 @@ script = ExtResource( 1 )
 margin_left = -1.1225
 margin_right = 1030.88
 margin_bottom = 608.0
+theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -45,6 +47,7 @@ margin_left = 405.209
 margin_top = 483.781
 margin_right = 573.209
 margin_bottom = 557.781
+theme = ExtResource( 2 )
 text = "Create Caste"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -55,6 +58,7 @@ margin_left = 615.0
 margin_top = 493.0
 margin_right = 735.0
 margin_bottom = 559.0
+theme = ExtResource( 2 )
 text = "End Turn"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -83,6 +87,7 @@ margin_left = 37.0412
 margin_top = 255.921
 margin_right = 117.041
 margin_bottom = 301.921
+theme = ExtResource( 2 )
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -93,6 +98,7 @@ margin_left = 909.051
 margin_top = 267.225
 margin_right = 980.051
 margin_bottom = 310.225
+theme = ExtResource( 2 )
 text = "Next"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -122,6 +128,7 @@ margin_left = 437.76
 margin_top = 111.124
 margin_right = 540.76
 margin_bottom = 164.124
+theme = ExtResource( 2 )
 text = "Boosts"
 __meta__ = {
 "_edit_use_anchors_": false

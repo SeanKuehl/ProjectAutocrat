@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scripts/Rights/RightMenu.gd" type="Script" id=1]
+[ext_resource path="res://Themes/AutocratTheme.tres" type="Theme" id=2]
 
 [node name="RightMenu" type="CanvasLayer"]
 script = ExtResource( 1 )
@@ -8,6 +9,7 @@ script = ExtResource( 1 )
 [node name="Panel" type="Panel" parent="."]
 margin_right = 1033.0
 margin_bottom = 609.0
+theme = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -44,6 +46,7 @@ margin_left = 638.0
 margin_top = 482.0
 margin_right = 790.0
 margin_bottom = 569.0
+theme = ExtResource( 2 )
 text = "Next"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -54,6 +57,7 @@ margin_left = 461.773
 margin_top = 484.49
 margin_right = 615.773
 margin_bottom = 571.49
+theme = ExtResource( 2 )
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
