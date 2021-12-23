@@ -60,7 +60,7 @@ func _ready():
 	get_node("CasteEditMenu").HideMyStuff()
 
 	casteViewMenu = casteViewMenu.instance()
-	casteViewMenu.connect("UserDoneWithViewMenu", self, "HideViewCasteMenu()")
+	casteViewMenu.connect("UserDoneWithViewMenu", self, "HideViewCasteMenu")
 	add_child(casteViewMenu)
 	get_node("CasteViewMenu").HideMyStuff()
 

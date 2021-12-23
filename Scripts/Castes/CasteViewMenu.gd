@@ -13,9 +13,13 @@ func Init(caste):
 	var militaryStats = caste.GetOccupationPopPointsAndApproval("Military")	#in the form [populationInOccupation, approval, points]
 	var policeStats = caste.GetOccupationPopPointsAndApproval("Police")
 	var peopleInEconomy = numInCaste - (militaryStats[0] + policeStats[0])
-	var economyPoints = peopleInEconomy * 2.0
+	var milPointsList = militaryStats[2]
+	var polPointsList = policeStats[2]
+	var economyPoints = (peopleInEconomy * 2.0) + milPointsList[0] + polPointsList[0]	#add the econ points from these roles
 
-	var pointsLabelText = "Military points: "+str(militaryStats[2])+", Police points: "+str(policeStats[2])+", Economy points: "+str(economyPoints)
+	#the stats at 2([2]) is a list of the different kinds of points, econ, pol and mil
+
+	var pointsLabelText = "Military points: "+str(milPointsList[2])+", Police points: "+str(polPointsList[1])+", Economy points: "+str(economyPoints)	#2 is index of mil points, 1 is index of police points
 	$PointsLabel.text = pointsLabelText
 
 	var totalApproval = caste.GetRightsApproval() + caste.GetRelativeApproval()
