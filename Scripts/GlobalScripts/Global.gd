@@ -15,7 +15,7 @@ var listOfWars = []
 
 var currentCasteNames = []
 
-var populationSize = 1000
+var populationSize = 1000000
 
 
 func GetCurrentCasteNames():
@@ -126,13 +126,13 @@ func GetRandomEventAtRandom():
 	#if a certain random change is met
 
 	var minChance = 1
-	var maxChance = 4	#I will check if it's 4, this means there's basically a 1 in 4 chance of a random event
+	var maxChance = 6	#I will check if it's 6, this means there's basically a 1 in 6 chance of a random event
 
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
 	var weatherOrNotToHaveEvent = rng.randi_range(minChance, maxChance)	#max inclusive
 
-	if weatherOrNotToHaveEvent == 4:
+	if weatherOrNotToHaveEvent == 6:
 		#get a random random event
 		var minEventIndex = 0
 		var maxEventIndex = len(listOfRandomEvents)-1

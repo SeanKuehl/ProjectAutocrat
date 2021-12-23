@@ -1,4 +1,12 @@
-Voting rights,can vote,can't vote
-1.0,-1.0
-Working rights,can work, can't work
+property rights,can own property,limited ownership,can't own property
+2.0,0.0,-2.0
+driving rights,can drive,can't drive
 2.0,-2.0
+legal rights,full rights,limited rights,basic human rights,no rights
+2.0,1.0,0,-2.0
+can attend education,full access,no access
+2.0,-2.0
+free speech,can speak freely,certain subjects prohibited,can't speak freely
+2.0,1.0,-2.0
+can hold government office,can hold office,only some offices allowed,no offices allowed
+2.0,1.0,-2.0

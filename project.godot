@@ -16,13 +16,17 @@ _global_script_class_icons={
 [application]
 
 config/name="ProjectAutocrat"
-run/main_scene="res://Scenes/root.tscn"
+run/main_scene="res://Scenes/TitleScreen/TitleScreen.tscn"
 boot_splash/image="res://Assets/Images/AutocratLogo.png"
 config/icon="res://icon.png"
 
 [autoload]
 
 Global="*res://Scripts/GlobalScripts/Global.gd"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [rendering]
 

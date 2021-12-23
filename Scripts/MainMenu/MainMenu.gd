@@ -884,6 +884,11 @@ func CheckIfEndTurnRequirementsMet():
 		canEndTurn = false
 		$WarningLabel.text = "Can't end turn, not everyone is in a caste!"
 
+	#make sure economy points aren't 0
+	if occupationPoints[0] < 0:
+		canEndTurn = false
+		$WarningLabel.text = "Can't end turn, not enough economy points"
+
 
 func CheckForOverThrowConditions():
 	var overthrown = false

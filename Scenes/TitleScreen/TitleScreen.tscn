@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/TitleScreen/TitleScreen.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Images/AutocratLogo.png" type="Texture" id=2]
+[ext_resource path="res://Themes/AutocratTheme.tres" type="Theme" id=3]
+
+[node name="TitleScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1035.0
+margin_bottom = 608.0
+theme = ExtResource( 3 )
+
+[node name="AutocratLogo" type="Sprite" parent="."]
+position = Vector2( 497.8, 122.266 )
+texture = ExtResource( 2 )
+
+[node name="PlayButton" type="Button" parent="."]
+margin_left = 380.877
+margin_top = 279.878
+margin_right = 626.877
+margin_bottom = 356.878
+theme = ExtResource( 3 )
+text = "Play"
+[connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]

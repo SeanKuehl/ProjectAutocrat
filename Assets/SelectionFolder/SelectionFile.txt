@@ -1,2 +1,6 @@
 genders,male,female
-sample,standin,standin
+races,white,black,latino,asiatic,first nations
+hair colors,brown,blond,black,red
+heights,0-4ft,4ft-5ft,5ft-6ft,6ft+
+glasses,has glasses,doesn't have glasses
+ages,0-10,10-20,20-40,40-60,60+

@@ -1,3 +1,21 @@
 generous peasants
 the peasants have been exceptionally generous this year
 500,0,0,0
+the critic
+A well known advocate of one of the castes has been silenced, to the disagreement of those who shared their views
+0,-5,0,0
+wedding
+A high maintenance family member is getting married, they're wedding will be no exception
+-500,0,0,0
+poster
+A military recruitment poster using your likeness has proven effective, a great rolemodel for the masses
+0,0,0,5
+nepotism
+A family friend has been stationed in a high military office, this has decreased the cohesiveness of the armed forces
+0,0,0,-5
+heroism
+A heroic police officer saved many lives and stopped a villain, this has lead to an uptick in enlistment
+0,0,5,0
+fallen star
+A high ranking police officer was killed in the line of duty, the force is suffering from his absense
+0,0,-5,0
