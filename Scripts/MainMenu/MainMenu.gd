@@ -165,7 +165,10 @@ func Init(econPoints, polPoints, milPoints):
 
 func AddNewlyCreatedCaste(newCasteInfo):
 
-	var isCasteDuplicateOfAnother = CheckIfCasteIsDuplicate(newCasteInfo[2])	#this is the index of the selection list
+	#var isCasteDuplicateOfAnother = CheckIfCasteIsDuplicate(newCasteInfo[2])	#this is the index of the selection list
+
+	#this is temp for testing!
+	var isCasteDuplicateOfAnother = false
 
 	if isCasteDuplicateOfAnother:
 		pass
@@ -253,7 +256,7 @@ func HideViewCasteMenu():
 
 func UpdateCasteScroll():
 	var lengthOfCasteList = len(casteList)
-	var numOfSlots = 3
+	var numOfSlots = 2
 	#also do similar for when caste is deleted!
 
 	#hide all castes, so that only those I want to show show
@@ -272,9 +275,9 @@ func UpdateCasteScroll():
 
 				casteList[x].rect_global_position = $SecondPos.global_position
 				casteList[x].ShowMyStuff()
-			elif x == 2:
-				casteList[x].rect_global_position = $ThirdPos.global_position
-				casteList[x].ShowMyStuff()
+#			elif x == 2:
+#				casteList[x].rect_global_position = $ThirdPos.global_position
+#				casteList[x].ShowMyStuff()
 	else:
 		#place as many as possible based on the caste scroll index
 		var tempScrollIndex = casteScrollIndex
@@ -287,11 +290,11 @@ func UpdateCasteScroll():
 		if tempScrollIndex < lengthOfCasteList:
 			casteList[tempScrollIndex].rect_global_position = $SecondPos.global_position
 			casteList[tempScrollIndex].ShowMyStuff()
-			tempScrollIndex += 1
 
-		if tempScrollIndex < lengthOfCasteList:
-			casteList[tempScrollIndex].rect_global_position = $ThirdPos.global_position
-			casteList[tempScrollIndex].ShowMyStuff()
+
+#		if tempScrollIndex < lengthOfCasteList:
+#			casteList[tempScrollIndex].rect_global_position = $ThirdPos.global_position
+#			casteList[tempScrollIndex].ShowMyStuff()
 
 
 
@@ -931,8 +934,8 @@ func _on_EndTurnButton_pressed():
 
 func _on_CasteBackButton_pressed():
 
-	var numOfSlots = 3
-	var decrementAmount = 3
+	var numOfSlots = 2
+	var decrementAmount = 2
 
 	if len(casteList) <= numOfSlots:
 		#don't do anything
@@ -947,15 +950,16 @@ func _on_CasteBackButton_pressed():
 
 
 func _on_CasteNextButton_pressed():
-	var numOfSlots = 3
-	var incrementAmount = 3
+	var numOfSlots = 2
+	var incrementAmount = 2
 
 	if len(casteList) <= numOfSlots:
 		#don't do anything
 		pass
 	else:
-		if (casteScrollIndex+incrementAmount) < (len(casteList)+incrementAmount):
-			#it should be less than because if there are 4 castes we need a seperate screen of 1
+		if (casteScrollIndex+incrementAmount) < ((len(casteList)+incrementAmount)-1):
+			#-1 added because it was going a screen too far
+			#it should be less than because if there are 3 castes we need a seperate screen of 1
 			#to show it, but still need our scroll index to go out far enough to include it
 			casteScrollIndex = casteScrollIndex+incrementAmount
 		else:
