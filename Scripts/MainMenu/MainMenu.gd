@@ -12,6 +12,8 @@ onready var warMenu = load("res://Scenes/Wars/WarMenu.tscn")
 
 onready var boostMenu = load("res://Scenes/BoostMenu/BoostMenu.tscn")
 
+onready var victoryMenu = load("res://Scenes/VictoryMenu/VictoryMenu.tscn")
+
 signal UserWantsToCreateCaste()
 
 var casteName = ""
@@ -84,6 +86,10 @@ func _ready():
 	boostMenu.connect("BoostCaste", self, "BoostCasteApproval")
 	add_child(boostMenu)
 	get_node("BoostMenu").HideMyStuff()
+
+	victoryMenu = victoryMenu.instance()
+	add_child(victoryMenu)
+	get_node("VictoryMenu").HideMyStuff()
 
 
 #var old = casteList[x].GetRightsApproval()
@@ -165,10 +171,9 @@ func Init(econPoints, polPoints, milPoints):
 
 func AddNewlyCreatedCaste(newCasteInfo):
 
-	#var isCasteDuplicateOfAnother = CheckIfCasteIsDuplicate(newCasteInfo[2])	#this is the index of the selection list
+	var isCasteDuplicateOfAnother = CheckIfCasteIsDuplicate(newCasteInfo[2])	#this is the index of the selection list
 
-	#this is temp for testing!
-	var isCasteDuplicateOfAnother = false
+
 
 	if isCasteDuplicateOfAnother:
 		pass
@@ -566,7 +571,7 @@ func GetOccupationPopPointsAndApproval():
 	milPopAndApprovalList[1] = milAverageApproval
 
 	polPopAndApprovalList[0] = polTotalPop
-	polPopAndApprovalList[0] = polAverageApproval
+	polPopAndApprovalList[1] = polAverageApproval
 
 	occupationPoints = overallPointsList
 
@@ -929,6 +934,11 @@ func _on_EndTurnButton_pressed():
 		treasury += occupationPoints[0]	#econ points
 		var treasuryLabelText = "Treasury: "+str(treasury)
 		$TreasuryLabel.text = treasuryLabelText
+
+		if turn == 50:
+			#this is the victory condition, for now
+			#do victory thing
+			get_node("VictoryMenu").HideMyStuff()
 
 
 
