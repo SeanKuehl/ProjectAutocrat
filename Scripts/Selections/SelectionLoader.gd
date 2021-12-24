@@ -1,5 +1,5 @@
 
-var sampleDir = "res://Assets/SelectionFolder/"
+var sampleDir = "user://SelectionFolder/"
 var selectionScript = load("res://Scripts/Selections/Selection.gd")
 
 # Called when the node enters the scene tree for the first time.

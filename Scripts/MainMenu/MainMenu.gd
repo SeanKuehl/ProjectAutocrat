@@ -903,6 +903,8 @@ func CheckIfEndTurnRequirementsMet():
 		canEndTurn = false
 		$WarningLabel.text = "Can't end turn, not enough economy points"
 
+	return canEndTurn
+
 
 func CheckForOverThrowConditions():
 	var overthrown = false
@@ -919,7 +921,7 @@ func _on_EndTurnButton_pressed():
 	var canEndTurn = CheckIfEndTurnRequirementsMet()
 	var overthrown = CheckForOverThrowConditions()
 
-	if canEndTurn or overthrown == false:
+	if canEndTurn and overthrown == false:
 
 		turn += 1
 		var turnLabelText = "Turn: "+str(turn)

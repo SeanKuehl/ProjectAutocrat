@@ -1,5 +1,5 @@
 
-var sampleDir = "res://Assets/OccupationsFolder/"
+var sampleDir = "user://OccupationsFolder/"
 var occupationScript = load("res://Scripts/Occupations/Occupation.gd")
 
 # Called when the node enters the scene tree for the first time.

@@ -1,4 +1,4 @@
-var sampleDir = "res://Assets/RandomEventsFolder/"
+var sampleDir = "user://RandomEventsFolder/"
 var randomEventScript = load("res://Scripts/RandomEvents/RandomEvent.gd")
 
 # Called when the node enters the scene tree for the first time.

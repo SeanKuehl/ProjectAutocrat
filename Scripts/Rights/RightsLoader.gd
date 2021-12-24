@@ -1,5 +1,5 @@
 
-var sampleDir = "res://Assets/RightsFolder/"
+var sampleDir = "user://RightsFolder/"
 var rightScript = load("res://Scripts/Rights/Right.gd")
 
 # Called when the node enters the scene tree for the first time.

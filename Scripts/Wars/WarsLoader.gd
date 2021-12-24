@@ -1,4 +1,4 @@
-var sampleDir = "res://Assets/WarsFolder/"
+var sampleDir = "user://WarsFolder/"
 var warScript = load("res://Scripts/Wars/War.gd")
 
 # Called when the node enters the scene tree for the first time.
