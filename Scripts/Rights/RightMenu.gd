@@ -92,8 +92,9 @@ func _on_NextButton_pressed():
 	var newSelectedItems = $ItemList.get_selected_items()
 
 	if len(newSelectedItems) == 0:
-		#default to the first value
-		newSelectedItems = [0]
+		#default to the last value
+		var indexOfLastValue = len(rightList[rightIndex].GetStringValues())-1
+		newSelectedItems = [indexOfLastValue]
 
 
 	#only one item should be selected

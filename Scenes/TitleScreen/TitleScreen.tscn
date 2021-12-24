@@ -28,4 +28,22 @@ margin_right = 626.877
 margin_bottom = 356.878
 theme = ExtResource( 3 )
 text = "Play"
+
+[node name="CreditsButton" type="Button" parent="."]
+margin_left = 384.0
+margin_top = 387.0
+margin_right = 627.0
+margin_bottom = 454.0
+theme = ExtResource( 3 )
+text = "Credits"
+
+[node name="ExitButton" type="Button" parent="."]
+margin_left = 384.26
+margin_top = 474.675
+margin_right = 630.26
+margin_bottom = 541.675
+theme = ExtResource( 3 )
+text = "Exit"
 [connection signal="pressed" from="PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="CreditsButton" to="." method="_on_CreditsButton_pressed"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_ExitButton_pressed"]

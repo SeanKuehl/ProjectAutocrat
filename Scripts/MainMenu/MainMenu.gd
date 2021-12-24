@@ -208,8 +208,9 @@ func CheckIfCasteIsDuplicate(listOfSelections):
 	var sameSoFar = true
 
 	for caste in casteList:
+		sameSoFar = true	#reset for next caste
 		var selectionsToCheck = caste.GetSelections()
-		print(selectionsToCheck)
+
 		for x in range(0, len(selectionsToCheck)):
 			var currentIncumbentSelection = selectionsToCheck[x].GetChosenValues()
 			var currentChallengerSelection = listOfSelections[x].GetChosenValues()
@@ -226,7 +227,7 @@ func CheckIfCasteIsDuplicate(listOfSelections):
 					break
 
 			if sameSoFar == false:
-				sameSoFar = true	#reset for next caste
+
 				break
 
 		if sameSoFar:
@@ -460,6 +461,7 @@ func HandleCostOfRights():
 	for x in range(0,len(casteList)):
 		totalCostOfAllRights += casteList[x].CalculateCostOfRights()
 
+
 	#subtract this amount from economy points
 	occupationPoints[0] -= totalCostOfAllRights	#zero is the index of economy points
 
@@ -468,11 +470,11 @@ func ResetCastesAfterChange():
 	for x in range(0,len(casteList)):
 		var peopleInCaste = CalculatePeopleInCasteBeforeConflicts(casteList[x].GetSelections())
 		casteList[x].SetAmountOfPeopleInCaste(peopleInCaste)
-		print(casteList[x].GetName())
-		print(casteList[x].GetRightsApproval())
-		print(casteList[x].GetRelativeApproval())
-		print(casteList[x].GetAmountOfPeopleInCaste())
-		print(casteList[x].GetID())
+#		print(casteList[x].GetName())
+#		print(casteList[x].GetRightsApproval())
+#		print(casteList[x].GetRelativeApproval())
+#		print(casteList[x].GetAmountOfPeopleInCaste())
+#		print(casteList[x].GetID())
 
 
 	ResolveAmountOfPeopleInCasteConflicts()
@@ -483,25 +485,27 @@ func ResetCastesAfterChange():
 
 	HandleCostOfRights()
 
+	UpdateDisplayedApprovalLabels()
+
+
+	UpdateCasteScroll()
+
+#	for x in range(0,len(casteList)):
+#		print(casteList[x].GetName())
+#		print(casteList[x].GetRightsApproval())
+#		print(casteList[x].GetRelativeApproval())
+#		print(casteList[x].GetAmountOfPeopleInCaste())
+#		print(casteList[x].GetID())
+
+func UpdateDisplayedApprovalLabels():
 	$EconomyPointsLabel.text = "Economy Points: "+str(occupationPoints[0])	#don't need approval for this since it doesn't matter for overthrow
 	$PolicePointsLabel.text = "Police Points/Approval: "+str(occupationPoints[1])+" / "+str(polPopAndApprovalList[1])
 	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(occupationPoints[2])+" / "+str(milPopAndApprovalList[1])
 
 
-
-	UpdateCasteScroll()
-
-	for x in range(0,len(casteList)):
-		print(casteList[x].GetName())
-		print(casteList[x].GetRightsApproval())
-		print(casteList[x].GetRelativeApproval())
-		print(casteList[x].GetAmountOfPeopleInCaste())
-		print(casteList[x].GetID())
-
-
 func GetOccupationPopPointsAndApproval():
 	#at end determine number in "economy" role by subtracting other role pops from
-	#population size
+	#pop in caste
 	var militaryPopList = []
 	var militaryApprovalList = []
 
@@ -509,6 +513,8 @@ func GetOccupationPopPointsAndApproval():
 	var policeApprovalList = []
 
 	var overallPointsList = [0,0,0]	#econ, pol, mil
+
+	var populationInCaste = 0
 
 	for caste in casteList:
 		# getocpoppointsandapproval returns [populationInOccupation, approval, points] where points is a list in itself
@@ -527,6 +533,8 @@ func GetOccupationPopPointsAndApproval():
 		overallPointsList[0] += pointsList[0]
 		overallPointsList[1] += pointsList[1]
 		overallPointsList[2] += pointsList[2]
+
+		populationInCaste = caste.GetAmountOfPeopleInCaste()	#this will be used to calculate economy points
 
 
 	#find wieghted approvals(weighted to population)
@@ -562,9 +570,9 @@ func GetOccupationPopPointsAndApproval():
 		polAverageApproval = polWieghtedApproval / polTotalPop
 
 	#now get for economy role, everyone not in another role
-	var popInEcon = Global.GetPopulationSize() - (polTotalPop + milTotalPop)
+	var popInEcon = populationInCaste - (polTotalPop + milTotalPop)
 	#econ has *2 multiplier for econ points
-	overallPointsList[0] += 2 * popInEcon
+	overallPointsList[0] += 2 * popInEcon	#economy multiplier is 2
 
 
 	milPopAndApprovalList[0] = milTotalPop
@@ -594,8 +602,9 @@ func SetRelativeApprovalBetweenTwoCastes(casteOne, casteTwo):
 	var firstRightsApproval = casteOne.GetRightsApproval()
 	var secondRightsApproval = casteTwo.GetRightsApproval()
 
+	var amountToDividePopBy = 1000
 	var rightsPoints = 0
-	var popPoints = (abs(firstPop - secondPop)) / 100
+	var popPoints = (abs(firstPop - secondPop)) / amountToDividePopBy
 
 	if firstRightsApproval > secondRightsApproval:
 		rightsPoints = (abs(firstRightsApproval - secondRightsApproval)) / 10
@@ -607,6 +616,7 @@ func SetRelativeApprovalBetweenTwoCastes(casteOne, casteTwo):
 
 		SetCasteRelativeApproval(casteOne.GetID(), newRelativeApproval)
 
+
 	elif secondRightsApproval > firstRightsApproval:
 		rightsPoints = (abs(secondRightsApproval - firstRightsApproval)) / 10
 
@@ -617,6 +627,7 @@ func SetRelativeApprovalBetweenTwoCastes(casteOne, casteTwo):
 			#if second is treated better, then relative approval is negative
 
 		SetCasteRelativeApproval(casteOne.GetID(), newRelativeApproval*-1)
+
 
 	else:
 		#they are the same and there's no relative approval to be gained or lost
@@ -763,13 +774,13 @@ func HandleRandomEvent(event):
 
 	#do temp military point change
 
-	milPopAndApprovalList[1] += int(values[2])	#the first one at [1] is approval
+	milPopAndApprovalList[1] += float(values[2])	#the first one at [1] is approval
 	temporaryMilPointChanges.append([turn+5, int(values[2])])	#in 5 turns undo it
 
 
 	#do temp police point change
 
-	polPopAndApprovalList[1] += int(values[3])
+	polPopAndApprovalList[1] += float(values[3])
 
 	temporaryPolPointChanges.append([turn+5, int(values[3])])
 
@@ -826,7 +837,7 @@ func HandleRandomWar():
 	var warPoints = currentWar.GetMilitaryPoints()
 	var yourPoints = occupationPoints[2]
 
-	var negativePenaltyToCaste = -2
+	var negativePenaltyToCaste = -5
 
 	if yourPoints >= warPoints:
 		currentWar.SetTurnsLeft(currentWar.GetTurnsLeft()-1)
@@ -849,9 +860,10 @@ func HandleRandomWar():
 		var newValue = casteList[randomCasteIndex].GetRightsApproval() + negativePenaltyToCaste
 
 		casteList[randomCasteIndex].SetRightsApproval(newValue)
+
 		casteTemporaryApprovalChanges.append([negativePenaltyToCaste, turn+5, casteList[randomCasteIndex].GetID()])
 
-
+		ResetCastesAfterChange()
 
 
 func UndoCasteTempApprovalChange(casteID, value):
@@ -861,6 +873,8 @@ func UndoCasteTempApprovalChange(casteID, value):
 			var old = casteList[x].GetRightsApproval()
 			var new = old - value
 			casteList[x].SetRightsApproval(new)
+
+	ResetCastesAfterChange()
 
 func CheckIfEndTurnRequirementsMet():
 	#warn user and don't let them end turn if
@@ -919,19 +933,20 @@ func _on_EndTurnButton_pressed():
 		else:
 			pass
 
-		if warIsActive:
-			#don't have two wars at the same time, just process current one
-			HandleRandomWar()
-		else:
-
-			var randomWar = Global.GetRandomWar(occupationPoints[2])
-			if typeof(randomWar) == TYPE_OBJECT:
-				currentWar = randomWar
-				warIsActive = true
-				get_node("WarMenu").ShowMyStuff()
-				get_node("WarMenu").ShowWarStarted(randomWar)
-			else:
-				pass
+		#wars cause huge problems right now, so exclude from release
+#		if warIsActive:
+#			#don't have two wars at the same time, just process current one
+#			HandleRandomWar()
+#		else:
+#
+#			var randomWar = Global.GetRandomWar(occupationPoints[2])
+#			if typeof(randomWar) == TYPE_OBJECT:
+#				currentWar = randomWar
+#				warIsActive = true
+#				get_node("WarMenu").ShowMyStuff()
+#				get_node("WarMenu").ShowWarStarted(randomWar)
+#			else:
+#				pass
 
 		#check if any temp changes need to be undone
 		HandleRemovingTemporaryChanges()
@@ -940,10 +955,12 @@ func _on_EndTurnButton_pressed():
 		var treasuryLabelText = "Treasury: "+str(treasury)
 		$TreasuryLabel.text = treasuryLabelText
 
+		UpdateDisplayedApprovalLabels()
+
 		if turn == 50:
 			#this is the victory condition, for now
 			#do victory thing
-			get_node("VictoryMenu").HideMyStuff()
+			get_node("VictoryMenu").ShowMyStuff()
 
 
 

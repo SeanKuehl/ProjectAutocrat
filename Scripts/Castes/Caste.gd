@@ -109,7 +109,7 @@ func GetOccupationPopPointsAndApproval(occupationName):
 	var approval = GetRightsApproval() + GetRelativeApproval()
 	var populationInOccupation = 0
 	var occupationIsEnabled = false
-
+	var amountToDividePopInOccupationBy = 100
 
 	for x in occupationList:
 		if x.GetSelected() == true:
@@ -120,7 +120,7 @@ func GetOccupationPopPointsAndApproval(occupationName):
 
 	if occupationIsEnabled:
 		populationInOccupation = GetAmountOfPeopleInCaste() / waysToDividePopBy
-		points = [multipliersList[0]*populationInOccupation, multipliersList[1]*populationInOccupation, multipliersList[2]*populationInOccupation]
+		points = [multipliersList[0]*(populationInOccupation/amountToDividePopInOccupationBy), multipliersList[1]*(populationInOccupation/amountToDividePopInOccupationBy), multipliersList[2]*(populationInOccupation/amountToDividePopInOccupationBy)]
 
 	return [populationInOccupation, approval, points]
 
