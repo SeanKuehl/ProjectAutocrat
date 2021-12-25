@@ -211,6 +211,7 @@ func ConnectCasteEditMenuSignals(editMenuObject):
 
 func StartEditOfSelections(selections, casteID):
 	get_node("MainMenu").HideMyStuff()
+	get_node("MainMenu/CasteEditMenu").HideMyStuff()
 	currentCasteID = casteID
 
 	editingCaste = true
@@ -229,7 +230,11 @@ func FinishEditOfSelections():
 	get_node("MainMenu").ShowMyStuff()
 
 func StartEditOfRights(rights, casteID):
+
 	get_node("MainMenu").HideMyStuff()
+
+	get_node("MainMenu/CasteEditMenu").HideMyStuff()
+
 	currentCasteID = casteID
 
 	editingCaste = true
@@ -245,7 +250,9 @@ func FinishEditOfRights():
 	get_node("MainMenu").ShowMyStuff()
 
 func StartEditOfOccupations(occupations, casteID):
+
 	get_node("MainMenu").HideMyStuff()
+	get_node("MainMenu/CasteEditMenu").HideMyStuff()
 	currentCasteID = casteID
 
 	editingCaste = true
@@ -263,6 +270,7 @@ func FinishEditOfOccupations():
 func StartEditOfNameAndDesc(passedName, passedDesc, casteID):
 
 	get_node("MainMenu").HideMyStuff()
+	get_node("MainMenu/CasteEditMenu").HideMyStuff()
 	currentCasteID = casteID
 
 	editingCaste = true

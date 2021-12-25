@@ -22,14 +22,14 @@ func ShowMyStuff():
 
 
 
-func ShowEvent(event):
+func ShowEvent(event, changes):
 	#maybe tell the user which caste is getting the approval change if needed
 
 	$EventNameLabel.text = event.GetName()
 	$EventDescLabel.text = event.GetDescription()
 
 	var values = event.GetValues()
-	var labelText = "Treasury change: "+str(values[0])+", caste approval change: "+str(values[1])+", military points change: "+str(values[2])+", "+" police points change: "+str(values[3])
+	var labelText = "Treasury change: "+str(changes[0])+", caste approval change: "+str(changes[1])+", military points change: "+str(changes[2])+", "+" police points change: "+str(changes[3])
 	$EventValuesLabel.text = labelText
 
 

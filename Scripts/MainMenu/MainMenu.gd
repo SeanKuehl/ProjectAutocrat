@@ -116,11 +116,13 @@ func BoostMilitaryApproval():
 	milPopAndApprovalList[1] += 5	#1 is the index of approval in the list
 	temporaryMilPointChanges.append([turn+5, 5])
 	get_node("BoostMenu").HideMyStuff()
+	ResetCastesAfterChange()
 
 func BoostPoliceApproval():
 	polPopAndApprovalList[1] += 5	#1 is the index of approval in the list
 	temporaryPolPointChanges.append([turn+5, 5])
 	get_node("BoostMenu").HideMyStuff()
+	ResetCastesAfterChange()
 
 func BoostCasteApproval(casteName):
 
@@ -132,6 +134,7 @@ func BoostCasteApproval(casteName):
 			casteTemporaryApprovalChanges.append([5, turn+5, casteList[x].GetID()])	#in 5 turns this will be undone
 
 	get_node("BoostMenu").HideMyStuff()
+	ResetCastesAfterChange()
 
 func HideBoostMenu():
 	get_node("BoostMenu").HideMyStuff()
@@ -158,6 +161,7 @@ func DeleteCasteAndCloseEditMenu(casteID):
 
 func HideCasteEditMenu():
 	get_node("CasteEditMenu").HideMyStuff()
+	ShowMyStuff()
 
 func HideRandomEventMenu():
 	get_node("RandomEventMenu").HideMyStuff()
@@ -584,7 +588,7 @@ func GetOccupationPopPointsAndApproval():
 	#now get for economy role, everyone not in another role
 	var popInEcon = populationInCaste - (polTotalPop + milTotalPop)
 	#econ has *2 multiplier for econ points
-	overallPointsList[0] += 2 * sqrt(popInEcon)	#economy multiplier is 2
+	overallPointsList[0] += popInEcon	#economy multiplier is 2, would be *2 here but I'm testing things out for balance
 
 
 	milPopAndApprovalList[0] = milTotalPop
@@ -688,6 +692,7 @@ func HideMyStuff():
 	$ThirdPos.hide()
 
 
+
 	#hide the castes
 	for x in range(0,len(casteList)):
 		casteList[x].HideMyStuff()
@@ -761,9 +766,11 @@ func HandleRandomEvent(event):
 	#event values in the order:
 	#treasury adjustment, random caste adjustment, mil point change(temp), pol point change(temp)
 	var values = event.GetValues()
+	var changeToCaste = 0
+	#random event values are now like 0.1/-0.1 so they are changes of 10% etc.
 
 	#adjust the treasury
-	treasury += int(values[0])
+	treasury += float(values[0]) * treasury
 
 	#if there is an amount to adjust a random caste by, adjust a random caste
 	if int(values[1]) == 0:
@@ -780,22 +787,33 @@ func HandleRandomEvent(event):
 			if casteList[x].GetID() == randomCasteID:
 				#casteTemporaryApprovalChanges
 				var old = casteList[x].GetRightsApproval()
-				var new = old + int(values[1])
+				var new = old + (old * float(values[1]))
+				changeToCaste = new
 				casteList[x].SetRightsApproval(new)
-				casteTemporaryApprovalChanges.append([int(values[1]), turn+5, randomCasteID])	#in 5 turns this will be undone
+				casteTemporaryApprovalChanges.append([float(values[1]), turn+5, randomCasteID])	#in 5 turns this will be undone
 
 
 	#do temp military point change
 
-	milPopAndApprovalList[1] += float(values[2])	#the first one at [1] is approval
-	temporaryMilPointChanges.append([turn+5, int(values[2])])	#in 5 turns undo it
+	milPopAndApprovalList[1] += milPopAndApprovalList[1] * float(values[2])	#the first one at [1] is approval
+	temporaryMilPointChanges.append([turn+5, float(values[2])])	#in 5 turns undo it
 
 
 	#do temp police point change
 
-	polPopAndApprovalList[1] += float(values[3])
+	polPopAndApprovalList[1] += polPopAndApprovalList[1] * float(values[3])
 
-	temporaryPolPointChanges.append([turn+5, int(values[3])])
+	temporaryPolPointChanges.append([turn+5, float(values[3])])
+
+	ResetCastesAfterChange()
+
+	var changesToReturn = []
+	changesToReturn.append(float(values[0]) * treasury)
+	changesToReturn.append(changeToCaste)
+	changesToReturn.append(milPopAndApprovalList[1] * float(values[2]))
+	changesToReturn.append(polPopAndApprovalList[1] * float(values[3]))
+
+	return changesToReturn
 
 
 func HandleRemovingTemporaryChanges():
@@ -925,10 +943,10 @@ func CheckForOverThrowConditions():
 	if milPopAndApprovalList[1] <= -5 or polPopAndApprovalList[1] <= -5:
 		$WarningLabel.text = "Military or Police approval too low, you've been overthrown"
 		overthrown = true
-
-	if rebellionsPoints > (occupationPoints[1]+occupationPoints[2]):
-
-		overthrown = true
+	#this is for testing only!
+#	if rebellionsPoints > (occupationPoints[1]+occupationPoints[2]):
+#
+#		overthrown = true
 
 	return overthrown
 
@@ -946,9 +964,9 @@ func _on_EndTurnButton_pressed():
 
 		var randomEvent = Global.GetRandomEventAtRandom()
 		if typeof(randomEvent) == TYPE_OBJECT:
-			HandleRandomEvent(randomEvent)
+			var changes = HandleRandomEvent(randomEvent)
 			get_node("RandomEventMenu").ShowMyStuff()
-			get_node("RandomEventMenu").ShowEvent(randomEvent)
+			get_node("RandomEventMenu").ShowEvent(randomEvent, changes)
 		else:
 			pass
 

@@ -20,6 +20,7 @@ margin_left = 26.9391
 margin_top = 20.2043
 margin_right = 158.939
 margin_bottom = 68.2039
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -29,6 +30,7 @@ margin_left = 408.576
 margin_top = 15.7145
 margin_right = 576.576
 margin_bottom = 85.7144
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -38,6 +40,7 @@ margin_left = 759.907
 margin_top = 10.1022
 margin_right = 922.907
 margin_bottom = 92.1017
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -92,6 +92,7 @@ func _on_SelectionsEditButton_pressed():
 
 
 func _on_RightsEditButton_pressed():
+
 	emit_signal("UserWantsToEditRights", rightsList, ID)
 
 
