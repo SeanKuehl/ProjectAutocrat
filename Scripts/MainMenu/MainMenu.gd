@@ -28,6 +28,7 @@ var casteList = []
 var milPopAndApprovalList = [0,0]	#pop, approval
 var polPopAndApprovalList = [0,0]	#pop, approval
 var occupationPoints = [0,0,0]	#econ, pol, mil
+var rebellionsPoints = 0
 
 var treasury = 500	#this is the initial amount in the treasury
 var turn = 1
@@ -165,7 +166,7 @@ func Init(econPoints, polPoints, milPoints):
 
 
 
-	$EconomyPointsLabel.text = "Economy Points: "+str(econPoints)	#don't need approval for this since it doesn't matter for overthrow
+	$EconomyPointsLabel.text = "Economy Points/rebellion points: "+str(econPoints)+" / "+str(rebellionsPoints)	#don't need approval for this since it doesn't matter for overthrow
 	$PolicePointsLabel.text = "Police Points/Approval: "+str(polPoints)+" / "+str(polPopAndApprovalList[1])
 	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(milPoints)+" / "+str(milPopAndApprovalList[1])
 
@@ -455,6 +456,15 @@ func ResolveIndividualConflict(casteOne, casteTwo):
 			#it's not a conflict, don't need to change anything
 			pass
 
+func HandleRebellionsPoints():
+	#CalculateRebellionPoints()
+	var totalRebellionPoints = 0
+	for x in range(0,len(casteList)):
+		totalRebellionPoints += casteList[x].CalculateRebellionPoints()
+
+	#set this as the new rebellions points
+	rebellionsPoints = totalRebellionPoints
+
 func HandleCostOfRights():
 
 	var totalCostOfAllRights = 0
@@ -485,6 +495,8 @@ func ResetCastesAfterChange():
 
 	HandleCostOfRights()
 
+	HandleRebellionsPoints()
+
 	UpdateDisplayedApprovalLabels()
 
 
@@ -498,7 +510,7 @@ func ResetCastesAfterChange():
 #		print(casteList[x].GetID())
 
 func UpdateDisplayedApprovalLabels():
-	$EconomyPointsLabel.text = "Economy Points: "+str(occupationPoints[0])	#don't need approval for this since it doesn't matter for overthrow
+	$EconomyPointsLabel.text = "Economy Points/rebellion points: "+str(occupationPoints[0])+" / "+str(rebellionsPoints)	#don't need approval for this since it doesn't matter for overthrow
 	$PolicePointsLabel.text = "Police Points/Approval: "+str(occupationPoints[1])+" / "+str(polPopAndApprovalList[1])
 	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(occupationPoints[2])+" / "+str(milPopAndApprovalList[1])
 
@@ -572,7 +584,7 @@ func GetOccupationPopPointsAndApproval():
 	#now get for economy role, everyone not in another role
 	var popInEcon = populationInCaste - (polTotalPop + milTotalPop)
 	#econ has *2 multiplier for econ points
-	overallPointsList[0] += 2 * popInEcon	#economy multiplier is 2
+	overallPointsList[0] += 2 * sqrt(popInEcon)	#economy multiplier is 2
 
 
 	milPopAndApprovalList[0] = milTotalPop
@@ -602,12 +614,12 @@ func SetRelativeApprovalBetweenTwoCastes(casteOne, casteTwo):
 	var firstRightsApproval = casteOne.GetRightsApproval()
 	var secondRightsApproval = casteTwo.GetRightsApproval()
 
-	var amountToDividePopBy = 1000
+
 	var rightsPoints = 0
-	var popPoints = (abs(firstPop - secondPop)) / amountToDividePopBy
+	var popPoints = sqrt(abs(firstPop - secondPop))
 
 	if firstRightsApproval > secondRightsApproval:
-		rightsPoints = (abs(firstRightsApproval - secondRightsApproval)) / 10
+		rightsPoints = sqrt(abs(firstRightsApproval - secondRightsApproval))
 
 			#this is the relative approval from only this other caste, there could be more so it's added to the current points, not set
 		var newRelativeApproval = casteOne.GetRelativeApproval() + (rightsPoints * popPoints)
@@ -618,10 +630,11 @@ func SetRelativeApprovalBetweenTwoCastes(casteOne, casteTwo):
 
 
 	elif secondRightsApproval > firstRightsApproval:
-		rightsPoints = (abs(secondRightsApproval - firstRightsApproval)) / 10
+		rightsPoints = sqrt(abs(secondRightsApproval - firstRightsApproval))
+
 
 			#this is the relative approval from only this other caste, there could be more so it's added to the current points, not set
-		var newRelativeApproval = casteOne.GetRelativeApproval() + (rightsPoints * popPoints)
+		var newRelativeApproval = abs(casteOne.GetRelativeApproval()) + (rightsPoints * popPoints)	#abs is around get relative approval because if there are two castes and they give same negative relative approval they will cancel eachother out and get 0, this fixes that problem
 
 			#only first needs to be set because the other caste will have it's time when it's the one being compared
 			#if second is treated better, then relative approval is negative
@@ -911,6 +924,10 @@ func CheckForOverThrowConditions():
 	#if military or police approval is -5 or lower than tell them they've been overthrown and lost
 	if milPopAndApprovalList[1] <= -5 or polPopAndApprovalList[1] <= -5:
 		$WarningLabel.text = "Military or Police approval too low, you've been overthrown"
+		overthrown = true
+
+	if rebellionsPoints > (occupationPoints[1]+occupationPoints[2]):
+
 		overthrown = true
 
 	return overthrown

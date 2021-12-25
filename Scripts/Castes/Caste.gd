@@ -75,8 +75,26 @@ func CalculateCostOfRights():
 
 			totalCostOfRights += float(doubleValues[indexOfValueToAdd])
 
-	totalCostOfRights = (GetAmountOfPeopleInCaste()/100) * totalCostOfRights
+	totalCostOfRights = (sqrt(GetAmountOfPeopleInCaste())) * totalCostOfRights
 	return totalCostOfRights
+
+func CalculateRebellionPoints():
+	#(people in caste / 100) * sum of negative rights = cost of rights
+	#it costs money to give out posititve rights
+	var totalNegativeRights = 0
+
+	for x in range(0,len(rightsList)):
+		var doubleValues = rightsList[x].GetDoubleValues()
+		var indexOfValueToAdd = rightsList[x].GetChosenIndex()
+
+		#if it's a posititve right, add it
+		if float(doubleValues[indexOfValueToAdd]) < 0:
+
+			totalNegativeRights += float(doubleValues[indexOfValueToAdd])
+
+	var totalRebellionsPoints = (sqrt(GetAmountOfPeopleInCaste())) * abs(totalNegativeRights)
+
+	return totalRebellionsPoints
 
 func HideMyStuff():
 	$Panel.hide()
@@ -109,7 +127,7 @@ func GetOccupationPopPointsAndApproval(occupationName):
 	var approval = GetRightsApproval() + GetRelativeApproval()
 	var populationInOccupation = 0
 	var occupationIsEnabled = false
-	var amountToDividePopInOccupationBy = 100
+
 
 	for x in occupationList:
 		if x.GetSelected() == true:
@@ -120,7 +138,7 @@ func GetOccupationPopPointsAndApproval(occupationName):
 
 	if occupationIsEnabled:
 		populationInOccupation = GetAmountOfPeopleInCaste() / waysToDividePopBy
-		points = [multipliersList[0]*(populationInOccupation/amountToDividePopInOccupationBy), multipliersList[1]*(populationInOccupation/amountToDividePopInOccupationBy), multipliersList[2]*(populationInOccupation/amountToDividePopInOccupationBy)]
+		points = [multipliersList[0]*(sqrt(populationInOccupation)), multipliersList[1]*(sqrt(populationInOccupation)), multipliersList[2]*(sqrt(populationInOccupation))]
 
 	return [populationInOccupation, approval, points]
 
