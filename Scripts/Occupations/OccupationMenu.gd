@@ -16,6 +16,7 @@ func HideMyStuff():
 	$HowManyLeftLabel.hide()
 	$NextButton.hide()
 	$BackButton.hide()
+	$NoteLabel.hide()
 
 func ShowMyStuff():
 	$Panel.show()
@@ -24,6 +25,7 @@ func ShowMyStuff():
 	$HowManyLeftLabel.show()
 	$NextButton.show()
 	$BackButton.show()
+	$NoteLabel.show()
 
 
 func CreateOccupationList():

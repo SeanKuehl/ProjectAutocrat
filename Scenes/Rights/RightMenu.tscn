@@ -62,5 +62,16 @@ text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="NoteLabel" type="Label" parent="."]
+margin_left = 18.0
+margin_top = 112.0
+margin_right = 213.0
+margin_bottom = 198.0
+text = "NOTE: if none are selected when the Next button is pressed it will default to the lowest(most negative) option"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="NextButton" to="." method="_on_NextButton_pressed"]
 [connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]

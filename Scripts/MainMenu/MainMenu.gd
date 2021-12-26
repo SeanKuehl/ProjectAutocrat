@@ -829,7 +829,7 @@ func HandleRandomEvent(event):
 
 
 	#if there is an amount to adjust a random caste by, adjust a random caste
-	if int(values[1]) == 0:
+	if float(values[1]) == 0:
 		#no change, ignore
 		pass
 	else:
@@ -969,6 +969,7 @@ func UndoCasteTempApprovalChange(casteID, value):
 	ResetCastesAfterChange()
 
 func CheckIfEndTurnRequirementsMet():
+
 	#warn user and don't let them end turn if
 	#pol or mil populations are 0 or not everyone is in a caste
 
@@ -999,6 +1000,7 @@ func CheckIfEndTurnRequirementsMet():
 
 
 func CheckForOverThrowConditions():
+
 	var overthrown = false
 	#if military or police approval is -5 or lower than tell them they've been overthrown and lost
 	if milPopAndApprovalList[1] <= -5 or polPopAndApprovalList[1] <= -5:
@@ -1057,6 +1059,9 @@ func _on_EndTurnButton_pressed():
 
 		var treasuryLabelText = "Treasury: "+str(treasury)
 		$TreasuryLabel.text = treasuryLabelText
+
+		#clear warning label on successful end turn
+		$WarningLabel.text = ""
 
 		UpdateDisplayedApprovalLabels()
 
