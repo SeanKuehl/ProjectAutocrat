@@ -12,7 +12,7 @@ func init():
 
 	var randomEvents = ReadLinesFromFile(file[0])
 
-
+	print(randomEvents)
 	var randomEventNames = []
 	var randomEventDesc = []
 	var randomEventValues = []

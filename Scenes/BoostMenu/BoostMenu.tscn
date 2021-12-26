@@ -51,7 +51,7 @@ margin_top = 249.186
 margin_right = 200.307
 margin_bottom = 300.186
 theme = ExtResource( 2 )
-text = "Boost by 5"
+text = "Boost by 10%"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -62,7 +62,7 @@ margin_top = 250.367
 margin_right = 482.615
 margin_bottom = 306.367
 theme = ExtResource( 2 )
-text = "Boost by 5"
+text = "Boost by 10%"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -73,7 +73,7 @@ margin_top = 380.515
 margin_right = 870.866
 margin_bottom = 436.515
 theme = ExtResource( 2 )
-text = "Boost by 5"
+text = "Boost by 10%"
 __meta__ = {
 "_edit_use_anchors_": false
 }

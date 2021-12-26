@@ -1,5 +1,5 @@
 extends CanvasLayer
-
+#C:\Users\turqo\AppData\Roaming\Godot\app_userdata\ProjectConquest
 onready var caste = load("res://Scenes/Castes/Caste.tscn")
 
 onready var casteEditMenu = load("res://Scenes/Castes/CasteEditMenu.tscn")
@@ -31,7 +31,9 @@ var occupationPoints = [0,0,0]	#econ, pol, mil
 var rebellionsPoints = 0
 
 var treasury = 500	#this is the initial amount in the treasury
+var maxTreasury = 5000000
 var turn = 1
+var victoryTurn = 50
 
 var numberOfCastesInRow = 1
 var startingX = 100
@@ -45,6 +47,8 @@ var casteScrollIndex = 0
 
 var warIsActive = false
 var currentWar = 0
+
+var boostPercentage = 0.1
 
 func _ready():
 	var turnLabelText = "Turn: "+str(turn)
@@ -113,25 +117,28 @@ func _ready():
 
 
 func BoostMilitaryApproval():
-	milPopAndApprovalList[1] += 5	#1 is the index of approval in the list
-	temporaryMilPointChanges.append([turn+5, 5])
+	#10% boost, 0.1
+	milPopAndApprovalList[1] += milPopAndApprovalList[1] * boostPercentage	#1 is the index of approval in the list
+	temporaryMilPointChanges.append([turn+5, (milPopAndApprovalList[1] * boostPercentage)])
 	get_node("BoostMenu").HideMyStuff()
 	ResetCastesAfterChange()
 
 func BoostPoliceApproval():
-	polPopAndApprovalList[1] += 5	#1 is the index of approval in the list
-	temporaryPolPointChanges.append([turn+5, 5])
+	#10% boost, 0.1
+	polPopAndApprovalList[1] += polPopAndApprovalList[1] * boostPercentage	#1 is the index of approval in the list
+	temporaryPolPointChanges.append([turn+5, (polPopAndApprovalList[1] * boostPercentage)])
 	get_node("BoostMenu").HideMyStuff()
 	ResetCastesAfterChange()
 
 func BoostCasteApproval(casteName):
+	#10% boost, 0.1
 
 	for x in range(0,len(casteList)):
 		if casteList[x].GetName() == casteName:
 			var old = casteList[x].GetRightsApproval()
-			var new = old + 5
+			var new = old + (old * boostPercentage)
 			casteList[x].SetRightsApproval(new)
-			casteTemporaryApprovalChanges.append([5, turn+5, casteList[x].GetID()])	#in 5 turns this will be undone
+			casteTemporaryApprovalChanges.append([(old * boostPercentage), turn+5, casteList[x].GetID()])	#in 5 turns this will be undone
 
 	get_node("BoostMenu").HideMyStuff()
 	ResetCastesAfterChange()
@@ -484,6 +491,7 @@ func ResetCastesAfterChange():
 	for x in range(0,len(casteList)):
 		var peopleInCaste = CalculatePeopleInCasteBeforeConflicts(casteList[x].GetSelections())
 		casteList[x].SetAmountOfPeopleInCaste(peopleInCaste)
+		casteList[x].SetRelativeApproval(0)	#this is so relative approval won't accumulate for no reason
 #		print(casteList[x].GetName())
 #		print(casteList[x].GetRightsApproval())
 #		print(casteList[x].GetRelativeApproval())
@@ -491,17 +499,35 @@ func ResetCastesAfterChange():
 #		print(casteList[x].GetID())
 
 
+
+
+
+
+
 	ResolveAmountOfPeopleInCasteConflicts()
+
+
 
 	CalculateCasteRelativeApproval()
 
+
+
 	GetOccupationPopPointsAndApproval()
+
+
 
 	HandleCostOfRights()
 
+
+
 	HandleRebellionsPoints()
 
+	#reapply temp changes
+	ReapplyTemporaryChanges()
+
 	UpdateDisplayedApprovalLabels()
+
+
 
 
 	UpdateCasteScroll()
@@ -512,6 +538,32 @@ func ResetCastesAfterChange():
 #		print(casteList[x].GetRelativeApproval())
 #		print(casteList[x].GetAmountOfPeopleInCaste())
 #		print(casteList[x].GetID())
+
+
+func ReapplyTemporaryChanges():
+	#casteTemporaryApprovalChanges, temporaryPolPointChanges, temporaryMilPointChanges
+	#first check if any police point changes are due
+
+	#caste: val, turn, id
+	#other: turn, val
+
+	for change in casteTemporaryApprovalChanges:
+		for x in range(0, len(casteList)):
+			if casteList[x].GetID() == change[2]:
+
+				var old = casteList[x].GetRelativeApproval()
+				var new = old + change[0]
+				casteList[x].SetRelativeApproval(new)
+
+
+	for change in temporaryMilPointChanges:
+		milPopAndApprovalList[1] += change[1]
+
+	for change in temporaryPolPointChanges:
+		polPopAndApprovalList[1] += change[1]
+
+
+
 
 func UpdateDisplayedApprovalLabels():
 	$EconomyPointsLabel.text = "Economy Points/rebellion points: "+str(occupationPoints[0])+" / "+str(rebellionsPoints)	#don't need approval for this since it doesn't matter for overthrow
@@ -588,7 +640,7 @@ func GetOccupationPopPointsAndApproval():
 	#now get for economy role, everyone not in another role
 	var popInEcon = populationInCaste - (polTotalPop + milTotalPop)
 	#econ has *2 multiplier for econ points
-	overallPointsList[0] += popInEcon	#economy multiplier is 2, would be *2 here but I'm testing things out for balance
+	overallPointsList[0] += popInEcon / 2	#economy multiplier is 2, would be *2 here but I'm testing things out for balance
 
 
 	milPopAndApprovalList[0] = milTotalPop
@@ -769,8 +821,12 @@ func HandleRandomEvent(event):
 	var changeToCaste = 0
 	#random event values are now like 0.1/-0.1 so they are changes of 10% etc.
 
+
+
 	#adjust the treasury
+
 	treasury += float(values[0]) * treasury
+
 
 	#if there is an amount to adjust a random caste by, adjust a random caste
 	if int(values[1]) == 0:
@@ -787,23 +843,26 @@ func HandleRandomEvent(event):
 			if casteList[x].GetID() == randomCasteID:
 				#casteTemporaryApprovalChanges
 				var old = casteList[x].GetRightsApproval()
+
 				var new = old + (old * float(values[1]))
+
 				changeToCaste = new
 				casteList[x].SetRightsApproval(new)
-				casteTemporaryApprovalChanges.append([float(values[1]), turn+5, randomCasteID])	#in 5 turns this will be undone
+				casteTemporaryApprovalChanges.append([(old * float(values[1])), turn+5, randomCasteID])	#in 5 turns this will be undone
 
 
 	#do temp military point change
 
 	milPopAndApprovalList[1] += milPopAndApprovalList[1] * float(values[2])	#the first one at [1] is approval
-	temporaryMilPointChanges.append([turn+5, float(values[2])])	#in 5 turns undo it
+	temporaryMilPointChanges.append([turn+5, milPopAndApprovalList[1] * float(values[2])])	#in 5 turns undo it
 
 
 	#do temp police point change
 
 	polPopAndApprovalList[1] += polPopAndApprovalList[1] * float(values[3])
 
-	temporaryPolPointChanges.append([turn+5, float(values[3])])
+	temporaryPolPointChanges.append([turn+5, polPopAndApprovalList[1] * float(values[3])])
+
 
 	ResetCastesAfterChange()
 
@@ -812,6 +871,8 @@ func HandleRandomEvent(event):
 	changesToReturn.append(changeToCaste)
 	changesToReturn.append(milPopAndApprovalList[1] * float(values[2]))
 	changesToReturn.append(polPopAndApprovalList[1] * float(values[3]))
+
+	print("mil after: "+str(milPopAndApprovalList[1]))
 
 	return changesToReturn
 
@@ -868,7 +929,7 @@ func HandleRandomWar():
 	var warPoints = currentWar.GetMilitaryPoints()
 	var yourPoints = occupationPoints[2]
 
-	var negativePenaltyToCaste = -5
+	var negativePenaltyPercentageToApplyToCaste = -0.1	#10%
 
 	if yourPoints >= warPoints:
 		currentWar.SetTurnsLeft(currentWar.GetTurnsLeft()-1)
@@ -888,11 +949,11 @@ func HandleRandomWar():
 		rng.randomize()
 		var randomCasteIndex = rng.randi_range(minCasteIndex, maxCasteIndex)
 
-		var newValue = casteList[randomCasteIndex].GetRightsApproval() + negativePenaltyToCaste
+		var newValue = casteList[randomCasteIndex].GetRightsApproval() + (casteList[randomCasteIndex].GetRightsApproval() * negativePenaltyPercentageToApplyToCaste)
 
 		casteList[randomCasteIndex].SetRightsApproval(newValue)
 
-		casteTemporaryApprovalChanges.append([negativePenaltyToCaste, turn+5, casteList[randomCasteIndex].GetID()])
+		casteTemporaryApprovalChanges.append([(casteList[randomCasteIndex].GetRightsApproval() * negativePenaltyPercentageToApplyToCaste), turn+5, casteList[randomCasteIndex].GetID()])
 
 		ResetCastesAfterChange()
 
@@ -971,30 +1032,35 @@ func _on_EndTurnButton_pressed():
 			pass
 
 		#wars cause huge problems right now, so exclude from release
-#		if warIsActive:
-#			#don't have two wars at the same time, just process current one
-#			HandleRandomWar()
-#		else:
-#
-#			var randomWar = Global.GetRandomWar(occupationPoints[2])
-#			if typeof(randomWar) == TYPE_OBJECT:
-#				currentWar = randomWar
-#				warIsActive = true
-#				get_node("WarMenu").ShowMyStuff()
-#				get_node("WarMenu").ShowWarStarted(randomWar)
-#			else:
-#				pass
+		if warIsActive:
+			#don't have two wars at the same time, just process current one
+			HandleRandomWar()
+		else:
+
+			var randomWar = Global.GetRandomWar(occupationPoints[2])
+			if typeof(randomWar) == TYPE_OBJECT:
+				currentWar = randomWar
+				warIsActive = true
+				get_node("WarMenu").ShowMyStuff()
+				get_node("WarMenu").ShowWarStarted(randomWar)
+			else:
+				pass
 
 		#check if any temp changes need to be undone
 		HandleRemovingTemporaryChanges()
 
 		treasury += occupationPoints[0]	#econ points
+
+		if treasury > maxTreasury:
+			#if it's at max, don't go any higher
+			treasury = maxTreasury
+
 		var treasuryLabelText = "Treasury: "+str(treasury)
 		$TreasuryLabel.text = treasuryLabelText
 
 		UpdateDisplayedApprovalLabels()
 
-		if turn == 50:
+		if turn == victoryTurn:
 			#this is the victory condition, for now
 			#do victory thing
 			get_node("VictoryMenu").ShowMyStuff()

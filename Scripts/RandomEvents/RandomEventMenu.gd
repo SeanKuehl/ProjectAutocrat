@@ -24,7 +24,7 @@ func ShowMyStuff():
 
 func ShowEvent(event, changes):
 	#maybe tell the user which caste is getting the approval change if needed
-
+	print(changes)
 	$EventNameLabel.text = event.GetName()
 	$EventDescLabel.text = event.GetDescription()
 
