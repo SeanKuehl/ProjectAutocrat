@@ -1,0 +1,7 @@
+You are the absolute leader of a new nation. You must organize your society and lead them through 50 turns in order to make sure your nation succeeds.
+You can organize your society by creating castes, groups of people of certain kinds with specific rights and occupations. 
+You must have a police force and a military and you must keep them happy, if they're approval of you falls below -5 you will be overthrown!
+Granting rights costs money, so be judicious with who you give rights to, as granting rights to too many will cost you.
+Watch out for rebellion points, if you don't have enough police and military to keep the angry inferiors in line there will be a rebellion!
+Castes also have 'relative approval', which means they gain or lose happiness based on their standing with other castes.
+You can boost castes, the military or the police but do so only when you need to, otherwise you won't be able to use it in an emergency.

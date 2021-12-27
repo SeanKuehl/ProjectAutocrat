@@ -14,6 +14,8 @@ var amountOfPeopleInCaste = -1
 var rightsApproval = -1
 var relativeApproval = 0
 
+var temporaryApprovalChange = 0
+
 var infoList = []
 
 var ID = -1
@@ -26,6 +28,13 @@ func _ready():
 
 func GetName():
 	return casteName
+
+
+func GetTempApprovalChange():
+	return temporaryApprovalChange
+
+func SetTempApprovalChange(newVal):
+	temporaryApprovalChange = newVal
 
 func CalculateRightsApproval():
 	var total = 0
@@ -50,7 +59,7 @@ func SetRelativeApproval(newValue):
 	relativeApproval = newValue
 
 func GetTotalApproval():
-	return (rightsApproval+relativeApproval)
+	return (rightsApproval+relativeApproval+temporaryApprovalChange)
 
 func GetID():
 	return ID

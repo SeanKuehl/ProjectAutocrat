@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Themes/AutocratTheme.tres" type="Theme" id=1]
+[ext_resource path="res://Scripts/TitleScreen/HowToPlayMenu/HowToPlayMenu.gd" type="Script" id=2]
+
+[node name="HowToPlayMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1035.0
+margin_bottom = 608.0
+
+[node name="AdviceLabel" type="Label" parent="."]
+margin_left = 246.863
+margin_top = 134.04
+margin_right = 824.863
+margin_bottom = 235.04
+autowrap = true
+
+[node name="NextButton" type="Button" parent="."]
+margin_left = 579.563
+margin_top = 269.623
+margin_right = 691.563
+margin_bottom = 328.623
+text = "Next"
+
+[node name="LastButton" type="Button" parent="."]
+margin_left = 350.258
+margin_top = 269.623
+margin_right = 453.258
+margin_bottom = 326.623
+text = "Last"
+
+[node name="DoneButton" type="Button" parent="."]
+margin_left = 440.972
+margin_top = 501.448
+margin_right = 567.972
+margin_bottom = 569.448
+text = "Done"
+[connection signal="pressed" from="NextButton" to="." method="_on_NextButton_pressed"]
+[connection signal="pressed" from="LastButton" to="." method="_on_LastButton_pressed"]
+[connection signal="pressed" from="DoneButton" to="." method="_on_DoneButton_pressed"]

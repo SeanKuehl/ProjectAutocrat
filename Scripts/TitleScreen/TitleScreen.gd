@@ -15,3 +15,7 @@ func _on_CreditsButton_pressed():
 
 func _on_ExitButton_pressed():
 	get_tree().quit()
+
+
+func _on_HowToPlayButton_pressed():
+	get_tree().change_scene("res://Scenes/TitleScreen/HowToPlayMenu/HowToPlayMenu.tscn")

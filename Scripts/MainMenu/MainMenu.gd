@@ -97,23 +97,7 @@ func _ready():
 	get_node("VictoryMenu").HideMyStuff()
 
 
-#var old = casteList[x].GetRightsApproval()
-#				var new = old + int(values[1])
-#				casteList[x].SetRightsApproval(new)
-#				casteTemporaryApprovalChanges.append([int(values[1]), turn+5, randomCasteID])	#in 5 turns this will be undone
-#
-#
-#	#do temp military point change
-#
-#	milPopAndApprovalList[1] += int(values[2])	#the first one at [1] is approval
-#	temporaryMilPointChanges.append([turn+5, int(values[2])])	#in 5 turns undo it
-#
-#
-#	#do temp police point change
-#
-#	polPopAndApprovalList[1] += int(values[3])
-#
-#	temporaryPolPointChanges.append([turn+5, int(values[3])])
+
 
 
 func BoostMilitaryApproval():
@@ -135,9 +119,9 @@ func BoostCasteApproval(casteName):
 
 	for x in range(0,len(casteList)):
 		if casteList[x].GetName() == casteName:
-			var old = casteList[x].GetRightsApproval()
+			var old = casteList[x].GetTempApprovalChange()
 			var new = old + (old * boostPercentage)
-			casteList[x].SetRightsApproval(new)
+			casteList[x].SetTempApprovalChange(new)
 			casteTemporaryApprovalChanges.append([(old * boostPercentage), turn+5, casteList[x].GetID()])	#in 5 turns this will be undone
 
 	get_node("BoostMenu").HideMyStuff()
@@ -525,6 +509,8 @@ func ResetCastesAfterChange():
 	#reapply temp changes
 	ReapplyTemporaryChanges()
 
+	WarnUserOfRebellion()
+
 	UpdateDisplayedApprovalLabels()
 
 
@@ -538,6 +524,14 @@ func ResetCastesAfterChange():
 #		print(casteList[x].GetRelativeApproval())
 #		print(casteList[x].GetAmountOfPeopleInCaste())
 #		print(casteList[x].GetID())
+
+
+func WarnUserOfRebellion():
+
+
+	if rebellionsPoints > (occupationPoints[1]+occupationPoints[2]):
+		$WarningLabel.text = "Plebs too many or too unhappy, rebellion immenent!"
+
 
 
 func ReapplyTemporaryChanges():
@@ -566,9 +560,9 @@ func ReapplyTemporaryChanges():
 
 
 func UpdateDisplayedApprovalLabels():
-	$EconomyPointsLabel.text = "Economy Points/rebellion points: "+str(occupationPoints[0])+" / "+str(rebellionsPoints)	#don't need approval for this since it doesn't matter for overthrow
-	$PolicePointsLabel.text = "Police Points/Approval: "+str(occupationPoints[1])+" / "+str(polPopAndApprovalList[1])
-	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(occupationPoints[2])+" / "+str(milPopAndApprovalList[1])
+	$EconomyPointsLabel.text = "Economy Points/rebellion points: "+str(round(occupationPoints[0]))+" / "+str(round(rebellionsPoints))	#don't need approval for this since it doesn't matter for overthrow
+	$PolicePointsLabel.text = "Police Points/Approval: "+str(round(occupationPoints[1]))+" / "+str(round(polPopAndApprovalList[1]))
+	$MilitaryPointsLabel.text = "Military Points/Approval: "+str(round(occupationPoints[2]))+" / "+str(round(milPopAndApprovalList[1]))
 
 
 func GetOccupationPopPointsAndApproval():
@@ -819,6 +813,7 @@ func HandleRandomEvent(event):
 	#treasury adjustment, random caste adjustment, mil point change(temp), pol point change(temp)
 	var values = event.GetValues()
 	var changeToCaste = 0
+	var casteName = ""
 	#random event values are now like 0.1/-0.1 so they are changes of 10% etc.
 
 
@@ -842,12 +837,13 @@ func HandleRandomEvent(event):
 		for x in range(0,len(casteList)):
 			if casteList[x].GetID() == randomCasteID:
 				#casteTemporaryApprovalChanges
-				var old = casteList[x].GetRightsApproval()
+				var old = casteList[x].GetTempApprovalChange()
 
 				var new = old + (old * float(values[1]))
 
 				changeToCaste = new
-				casteList[x].SetRightsApproval(new)
+				casteName = casteList[x].GetName()
+				casteList[x].SetTempApprovalChange(new)
 				casteTemporaryApprovalChanges.append([(old * float(values[1])), turn+5, randomCasteID])	#in 5 turns this will be undone
 
 
@@ -871,8 +867,9 @@ func HandleRandomEvent(event):
 	changesToReturn.append(changeToCaste)
 	changesToReturn.append(milPopAndApprovalList[1] * float(values[2]))
 	changesToReturn.append(polPopAndApprovalList[1] * float(values[3]))
+	changesToReturn.append(casteName)
 
-	print("mil after: "+str(milPopAndApprovalList[1]))
+
 
 	return changesToReturn
 
@@ -949,11 +946,11 @@ func HandleRandomWar():
 		rng.randomize()
 		var randomCasteIndex = rng.randi_range(minCasteIndex, maxCasteIndex)
 
-		var newValue = casteList[randomCasteIndex].GetRightsApproval() + (casteList[randomCasteIndex].GetRightsApproval() * negativePenaltyPercentageToApplyToCaste)
+		var newValue = casteList[randomCasteIndex].GetTempApprovalChange() + (casteList[randomCasteIndex].GetTempApprovalChange() * negativePenaltyPercentageToApplyToCaste)
 
-		casteList[randomCasteIndex].SetRightsApproval(newValue)
+		casteList[randomCasteIndex].SetTempApprovalChange(newValue)
 
-		casteTemporaryApprovalChanges.append([(casteList[randomCasteIndex].GetRightsApproval() * negativePenaltyPercentageToApplyToCaste), turn+5, casteList[randomCasteIndex].GetID()])
+		casteTemporaryApprovalChanges.append([(casteList[randomCasteIndex].GetTempApprovalChange() * negativePenaltyPercentageToApplyToCaste), turn+5, casteList[randomCasteIndex].GetID()])
 
 		ResetCastesAfterChange()
 
@@ -962,9 +959,9 @@ func UndoCasteTempApprovalChange(casteID, value):
 
 	for x in range(0, len(casteList)):
 		if casteList[x].GetID() == casteID:
-			var old = casteList[x].GetRightsApproval()
+			var old = casteList[x].GetTempApprovalChange()
 			var new = old - value
-			casteList[x].SetRightsApproval(new)
+			casteList[x].SetTempApprovalChange(new)
 
 	ResetCastesAfterChange()
 
@@ -1006,10 +1003,10 @@ func CheckForOverThrowConditions():
 	if milPopAndApprovalList[1] <= -5 or polPopAndApprovalList[1] <= -5:
 		$WarningLabel.text = "Military or Police approval too low, you've been overthrown"
 		overthrown = true
-	#this is for testing only!
-#	if rebellionsPoints > (occupationPoints[1]+occupationPoints[2]):
-#
-#		overthrown = true
+
+	if rebellionsPoints > (occupationPoints[1]+occupationPoints[2]):
+
+		overthrown = true
 
 	return overthrown
 
